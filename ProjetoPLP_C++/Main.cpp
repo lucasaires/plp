@@ -12,9 +12,9 @@
  *
  */
 
-#include <iostream>;
-#include <stdio.h>;
-#include <string>;
+#include <iostream>
+#include <stdio.h>
+#include <string>
 using namespace std;
 
 //Definicoes das funcoes basicas do sistema.
@@ -30,33 +30,22 @@ int main(){
 	cout << " .::. PrompSkoob .::." << endl;
 	cout << "   Menu Principal  " << endl;
 	cout << "   Ola, usuario!" << endl << endl;
-	cout << "   (1) Usuarios"<< endl;
-	cout << "   (2) Livros" << endl;
-	cout << "   (3) Minha Estante" << endl;
-	cout << "   (4) Pesquisas" << endl;
-	cout << "   (5) Recomendacoes de Livros" << endl;
+	cout << "   (1) Cadastrar Usuario"<< endl;
+	cout << "   (2) Cadastrar Livros" << endl;
+	cout << "   (3) Realizar Login" << endl;
 	cout << "   (6) Sair" << endl << endl;
 	cout << " Opcao: ";
 	cin >> entrada;
 
 	switch(entrada){
 		case 1:
-			usuarios();
+			cadastrarUsuario();
 			break;
 		case 2:
-			livros();
+			cadastrarLivros();
 			break;
 		case 3:
-			minhaEstante();
-			break;
-		case 4:
-			pesquisas();
-			break;
-		case 5:
-			recomendacoes();
-			break;
-		case 6:
-			cout << "Volte sempre!";
+			realizarLogin();
 			break;
 		default:
 			cout << "Valor invalido!";
@@ -65,15 +54,47 @@ int main(){
 }
 
 //Falta implementacao
-void usuarios(){
+void cadastrar(){
+	
+	string nome; 
+	cout << "Digite o seu nome:" << endl;
+	cin >> nome;
+
+	string login;
+	cout << "Digite o seu login:" << endl;
+	cin >> login;
+
+	int senha;
+	cout << "Digite a sua senha númerica:" << endl;
+	cin >> senha;
+
+
 }
 
 //Falta implementacao
-void livros(){
+void CadastarLivros(){
+
+	string nome; 
+	cout <<"Digite o nome do Livro:" << endl;
+	cin >> nome;
+
+	string autor;
+	cout << "Digite o nome do Autor:" << endl;
+	cin >> autor;
+
 }
 
 //Falta implementacao
-void minhaEstante(){
+void realizarLogin(){
+
+	string login;
+	cout << "Digite o seu login:" << endl;
+	cin >> login;
+
+	int senha; 
+	cout << "Digite a sua senha:" << endl;
+	cin >> senha;
+
 
 }
 
