@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <string>
 #import "constantes.cpp"
+#import "livrosdb.cpp"
 
 using namespace std;
 
@@ -140,6 +141,15 @@ void CadastarLivros() {
     cout << "Digite o nome do Autor:" << endl;
     cin >> autor;
 
+    int paginas;
+    cout << "Quantidade de paginas: " << endl;
+    cin >> paginas;
+
+    int genero;
+    cout << "Digite o genero do livro(Ficção[1] Romance[2] Não Ficção[3] Suspense[4]): " << endl;
+    cin >> genero;
+
+
 }
 
 //Falta implementacao
@@ -162,4 +172,5 @@ void pesquisas() {
 
 //Falta implementacao
 void recomendacoes() {
+    
 }
