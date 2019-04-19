@@ -14,8 +14,8 @@
 #include <iostream>
 #include <stdio.h>
 #include <string>
-#import "constantes.cpp"
-#import "livrosdb.cpp"
+#include "constantes.cpp"
+#include "livrosdb.cpp"
 
 using namespace std;
 
@@ -168,6 +168,59 @@ void realizarLogin() {
 
 //Falta implementacao
 void pesquisas() {
+    int opcao; 
+    const int AUTOR = 1;
+    const int LIVRO = 2;
+    const int GENERO = 3;
+
+    cout << "Digite a opção de Pesquisa de sua preferência: " << endl;
+    cout << "Pesquisa por (1)Autor: " << endl;
+    cout << "Pesquisa por (2)Livro: " << endl;
+    cout << "Pesquisa por (3)Gênero:" << endl;
+    cin >> opcao;
+
+    switch (opcao)
+    {
+        case AUTOR:
+            pesquisasAutor();
+            break;
+        
+        case LIVRO:
+            pesquisasLivro();
+            break;
+        
+        case GENERO:
+            pesquisasGenero();
+            break;
+    
+        default:
+            cout << "Opcao inválida" << endl;
+            break;
+    }
+}
+
+void pesquisasAutor() {
+    string pesquisa;
+    cout << "Digite o nome do Autor: " << endl;
+
+    cin >> pesquisa;
+
+}
+
+void pesquisasLivro() {
+    string pesquisa;
+    cout << "Digite o nome do Livro: " << endl; 
+
+    cin >> pesquisa;
+
+}
+
+void pesquisasGenero() {
+    string pesquisa;
+    cout << "Digite o nome do gênero: " << endl;
+
+    cin >> pesquisa;
+    
 }
 
 //Falta implementacao
