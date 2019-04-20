@@ -21,24 +21,24 @@ dada por usuários do **PrompSkoob**.
 
 ### Menu Principal
 
-![Menu Principal Logado](./docs/fig1.png)
+![Menu Principal Logado](./imperativo/docs/fig1.png)
 
 *Figura 01: Menu principal quando usuário está autenticado.*
 
-![Menu Principal Visitante](./docs/fig2.png)
+![Menu Principal Visitante](./imperativo/docs/fig2.png)
 
 *Figura 02: Menu principal quando usuário é visitante.*
 
 ### Funcionalidade 01: Quero me Cadastrar
 
-![Submenu Cadastro Usuário](./docs/fig3.png)
+![Submenu Cadastro Usuário](./imperativo/docs/fig3.png)
 
 *Figura 03:  Exibição  quando usuário escolhe a opção [1] para escolher entre "Criar conta" ou  "Voltar para o menu prinicipal".*
 
 Será exibido um submenu para o usuário confirme se deseja se cadastrar ou voltar para o menu anterior.
 O usuário poderá  se cadastrar no PrompSkoob para ter acesso a recursos exclusivos.
 
-![Cadastro de Usuário](./docs/fig4.png)
+![Cadastro de Usuário](./imperativo/docs/fig4.png)
 
 *Figura 04:  Exibição  quando usuário escolhe a opção [1] para efetuar o cadastro de usuário.*
 
