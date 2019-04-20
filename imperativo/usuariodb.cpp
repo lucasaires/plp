@@ -6,6 +6,10 @@
 
 using namespace std;
 
+int autenticaUsuario(struct Usuario &usuario);
+void criaTabelaUsuario();
+int obtemID();
+
 void criaTabelaUsuario() {
     sqlite3 *bancoDados;
     char *erroBanco;
@@ -35,6 +39,72 @@ void criaTabelaUsuario() {
     }
 
     sqlite3_close(bancoDados);
+}
+
+/**
+ * Autentica o usuario atraves do email e senha.
+ *
+ * @param usuario
+ * @return 0 (sucesso) e 1 (erro)
+ */
+int autenticaUsuario(struct Usuario &usuario) {
+    criaTabelaUsuario();
+
+    sqlite3 *bancoDados;
+    sqlite3_stmt *stmt;
+    int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
+    string mensagemErro = "Ocorreu um erro ao autenticar usuario: ";
+
+    if (retorno != SQLITE_OK) {
+        exibeMensagemErroBancoDados("Nao foi possível abrir o banco de dados: ", sqlite3_errmsg(bancoDados));
+        sqlite3_finalize(stmt);
+        sqlite3_close(bancoDados);
+
+        return 1;
+    }
+
+    string sql = "SELECT id, nome, ficcao, nao_ficcao, romance, horror, biografia "
+                 "FROM usuario "
+                 "WHERE email = '" + usuario.email + "' AND senha = '" + usuario.senha + "' "
+                 "LIMIT 1;";
+
+    retorno = sqlite3_prepare(bancoDados, sql.c_str(), -1, &stmt, NULL);
+
+    if (retorno != SQLITE_OK) {
+        exibeMensagemErroBancoDados(mensagemErro, sqlite3_errmsg(bancoDados));
+        sqlite3_finalize(stmt);
+        sqlite3_close(bancoDados);
+
+        return 1;
+    }
+
+    while (true) {
+        retorno = sqlite3_step(stmt);
+
+        if (retorno == SQLITE_DONE)
+            break;
+
+        if (retorno != SQLITE_ROW) {
+            exibeMensagemErroBancoDados(mensagemErro, sqlite3_errmsg(bancoDados));
+            sqlite3_finalize(stmt);
+            sqlite3_close(bancoDados);
+
+            return 1;
+        }
+
+        usuario.id = sqlite3_column_int(stmt, 0);
+        usuario.nome = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1));
+        usuario.ficcao = sqlite3_column_int(stmt, 2);
+        usuario.naoFiccao = sqlite3_column_int(stmt, 3);
+        usuario.romance = sqlite3_column_int(stmt, 4);
+        usuario.horror = sqlite3_column_int(stmt, 5);
+        usuario.biografia = sqlite3_column_int(stmt, 6);
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(bancoDados);
+
+    return 0;
 }
 
 string formataInteresses(int interesses[]) {
@@ -115,7 +185,7 @@ int consultaUsuario(vector<string> &usuario, int id) {
  * @return ultimo id (sucesso) e -1 (erro)
  */
 int obtemID() {
-    int id;
+    int id = 1;
     sqlite3 *bancoDados;
     sqlite3_stmt *stmt;
     int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);

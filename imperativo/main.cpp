@@ -21,7 +21,8 @@
 
 using namespace std;
 
-int usuarioLogado = 0;
+int estaLogado = 0;
+struct Usuario usuario;
 
 //Definicoes das funcoes basicas do sistema.
 void usuarios();
@@ -30,12 +31,11 @@ void minhaEstante();
 void pesquisas();
 void recomendacoes();
 void cadastraUsuario();
-void exibeMensagem(string mensagem);
-void exibeMensagemErro(string mensagem);
 void exibeMenu();
-void exibeSubmenuCadastroUsuario();
 void exibeMenuUsuario();
 void exibeMenuVisitante();
+void exibeAutenticacaoUsuario();
+void exibeCadastroUsuario();
 
 int main() {
     exibeMenu();
@@ -46,7 +46,7 @@ int main() {
  * Exibe o menu de acordo com usuario logado.
  */
 void exibeMenu() {
-    if (usuarioLogado) {
+    if (estaLogado) {
         exibeMenuUsuario();
     } else {
         exibeMenuVisitante();
@@ -62,7 +62,7 @@ void exibeMenuUsuario() {
     while (opcao != M_SAIR) {
         cout << " .::. PrompSkoob .::." << endl;
         cout << " - Menu Principal - " << endl;
-        cout << " Ola, NOME USUARIO!" << endl << endl;
+        cout << " Ola, " << usuario.nome << "!" << endl << endl;
         cout << " (1) Editar meu perfil" << endl;
         cout << " (2) Gerenciar livros" << endl;
         cout << " (3) Minha estante" << endl;
@@ -103,7 +103,10 @@ void exibeMenuVisitante() {
 
         switch (opcao) {
             case MV_CADASTRO_USUARIO:
-                exibeSubmenuCadastroUsuario();
+                exibeCadastroUsuario();
+                break;
+            case MV_AUTENTICACAO:
+                exibeAutenticacaoUsuario();
                 break;
             case MV_SAIR:
                 exibeMensagem("Ate breve... :)");
@@ -115,30 +118,25 @@ void exibeMenuVisitante() {
 }
 
 /**
- * Exibe o submenu de cadastro de usuario.
+ * Exibe cadastro de usuario.
  */
-void exibeSubmenuCadastroUsuario() {
-    int opcao;
+void exibeCadastroUsuario() {
+    if(cadastroUsuario()) {
+        exibeMenu();
+    }
+}
 
-    while (opcao != 2) {
-        cout << " .::. PrompSkoob .::." << endl;
-        cout << " - Quero me Cadastrar - " << endl << endl;
-        cout << " (1) Quero criar minha conta" << endl;
-        cout << " (2) Voltar para o menu principal" << endl << endl;
-        cout << "Opcao: ";
-        cin >> opcao;
+/**
+ * Exibe autenticacao de usuario.
+ */
+void exibeAutenticacaoUsuario() {
+    usuario = autenticacaoUsuario();
 
-        switch (opcao) {
-            case 1:
-                cadastroUsuario();
-                opcao = 2;
-                break;
-            case 2:
-                exibeMenu();
-                break;
-            default:
-                exibeMensagemErro("Opcao invalida!");
-        }
+    if (usuario.id > 0) {
+        estaLogado = 1;
+        exibeMenu();
+    } else {
+        estaLogado = 0;
     }
 }
 

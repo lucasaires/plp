@@ -33,14 +33,11 @@ dada por usuários do **PrompSkoob**.
 
 ![Submenu Cadastro Usuário](./imperativo/docs/fig3.png)
 
-*Figura 03:  Exibição  quando usuário escolhe a opção [1] para escolher entre "Criar conta" ou  "Voltar para o menu prinicipal".*
+*Figura 03:  Exibição  quando usuário escolhe a opção [1] para efetuar o cadastro de usuário.*
 
 Será exibido um submenu para o usuário confirme se deseja se cadastrar ou voltar para o menu anterior.
+
 O usuário poderá  se cadastrar no PrompSkoob para ter acesso a recursos exclusivos.
-
-![Cadastro de Usuário](./imperativo/docs/fig4.png)
-
-*Figura 04:  Exibição  quando usuário escolhe a opção [1] para efetuar o cadastro de usuário.*
 
 O usuário deverá cadastrar os seguintes campos: **nome** (obrigatório),  **e-mail** (único e obrigatório) que será utilizado para autenticação no programa, **senha** de acesso (obrigatório) e a escolha de **interesses** de gêneros de livros que poderá ser utilizado no futuro para recomendação de livros. Após concluído o cadastrado o menu principal irá mudar para o menu visitante (figura 02).
 
