@@ -107,16 +107,49 @@ int autenticaUsuario(struct Usuario &usuario) {
     return 0;
 }
 
-string formataInteresses(int interesses[]) {
-    string formatacao = "";
+/**
+ * Edita as informacoes de usuario.
+ *
+ * @param usuario
+ * @return 0 (sucesso) e 1 (erro)
+ */
+int editaUsuario(struct Usuario usuario) {
+    sqlite3 *bancoDados;
+    char *erroBanco;
+    int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
+    string mensagemErro = "Ocorreu um erro ao editar as informaçéos do usuário: ";
 
-    for (int indice = 0; indice < 4; indice++) {
-        if (interesses[indice] > 0) {
-            formatacao += to_string(interesses[indice]) + ";";
-        }
+    if (retorno != SQLITE_OK) {
+        exibeMensagemErroBancoDados("Não foi possível abrir o banco de dados: ", sqlite3_errmsg(bancoDados));
+        sqlite3_close(bancoDados);
+
+        return 1;
     }
 
-    return formatacao;
+    string sql = "UPDATE usuario "
+                 "SET nome = '" + usuario.nome + "', "
+                     "email = '" + usuario.email + "', "
+                     "senha = '" + usuario.senha + "', "
+                     "ficcao = '" + to_string(usuario.ficcao) + "', "
+                     "nao_ficcao = '" + to_string(usuario.naoFiccao) + "', "
+                     "romance = '" + to_string(usuario.romance) + "', "
+                     "horror = '" + to_string(usuario.horror) + "', "
+                     "biografia = '" + to_string(usuario.biografia) + "'"
+                 "WHERE id = " + to_string(usuario.id) + ";";
+
+    retorno = sqlite3_exec(bancoDados, sql.c_str(), NULL, 0, &erroBanco);
+
+    if (retorno != SQLITE_OK) {
+        exibeMensagemErroBancoDados(mensagemErro, sqlite3_errmsg(bancoDados));
+        sqlite3_free(erroBanco);
+        sqlite3_close(bancoDados);
+
+        return 1;
+    }
+
+    sqlite3_close(bancoDados);
+
+    return 0;
 }
 
 /**

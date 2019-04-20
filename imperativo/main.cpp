@@ -36,6 +36,7 @@ void exibeMenuUsuario();
 void exibeMenuVisitante();
 void exibeAutenticacaoUsuario();
 void exibeCadastroUsuario();
+void exibeEdicaoPerfilUsuario();
 
 int main() {
     exibeMenu();
@@ -75,6 +76,9 @@ void exibeMenuUsuario() {
         cin >> opcao;
 
         switch (opcao) {
+            case M_EDITAR_PERFIL:
+                exibeEdicaoPerfilUsuario();
+                break;
             case M_SAIR:
                 exibeMensagem("Ate breve... :)");
                 exit(EXIT_SUCCESS);
@@ -137,6 +141,12 @@ void exibeAutenticacaoUsuario() {
         exibeMenu();
     } else {
         estaLogado = 0;
+    }
+}
+
+void exibeEdicaoPerfilUsuario() {
+    if (edicaoPerfilUsuario(usuario)) {
+        exibeMenu();
     }
 }
 
