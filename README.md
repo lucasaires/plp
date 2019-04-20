@@ -31,7 +31,7 @@ dada por usuários do **PrompSkoob**.
 
 ### Funcionalidade 01: Quero me Cadastrar
 
-![Submenu Cadastro Usuário](./imperativo/docs/fig3.png)
+![Cadastro Usuário](./imperativo/docs/fig3.png)
 
 *Figura 03:  Exibição  quando usuário escolhe a opção [1] para efetuar o cadastro de usuário.*
 
@@ -42,3 +42,30 @@ O usuário poderá  se cadastrar no PrompSkoob para ter acesso a recursos exclus
 O usuário deverá cadastrar os seguintes campos: **nome** (obrigatório),  **e-mail** (único e obrigatório) que será utilizado para autenticação no programa, **senha** de acesso (obrigatório) e a escolha de **interesses** de gêneros de livros que poderá ser utilizado no futuro para recomendação de livros. Após concluído o cadastrado o menu principal irá mudar para o menu visitante (figura 02).
 
 Caso ocorra algum erro ao registrar as informações será exibido um mensagem de erro.
+
+### Funcionalidade 02: Autenticação
+
+![Autenticação Usuário](./imperativo/docs/fig4.png)
+
+*Figura 04: Exibição  quando usuário escolhe a opção [2] para efetuar a autenticação do usuário.*
+
+Ao escolher a opção `[2]` o usuário poderá realizar autenticação utilizando o e-mail e senha definido no momento do 
+cadastro. Os campos **e-mail** (obrigatório) e **senha** (obrigatório).
+
+Caso não exista um usuário com e-mail e senha válido será exibida uma mensagem de erro.
+
+### Funcionalidade 03: Editar Perfil
+
+![Opção edição usuário](./imperativo/docs/fig5.png)
+
+*Figura 05: Pelo menu principal quando usuário logado, o usuário escolhe a opção [1] para efetuar a edição de usuário.*
+
+O usuário irá escolher a opção `[1]`  e em seguida, será possível selecionar qual campo deseja alterar. 
+
+![Edição usuário](./imperativo/docs/fig6.png)
+
+*Figura 06: Exibição  quando usuário efetua a edição do perfil do usuário.*
+
+Após selecionado o campo, o usuário irá informar o novo valor do campo. Após concluída a edição o usuário poderá editar outro campo, caso ache necessário.
+
+Caso o **ID** ou **Campo** informado seja inválido será lançada uma mensagem de erro.

@@ -3,6 +3,7 @@ const char * BANCO_DADOS = "prompskoob.sqlite";
 /**
  *  Menu principal
  */
+const int M_EDITAR_PERFIL = 1;
 const int M_SAIR = 8;
 
 /**
