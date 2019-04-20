@@ -16,10 +16,12 @@
 #include <string>
 #import "constantes.cpp"
 #import "livrosdb.cpp"
+#import "usuario.cpp"
+#import "utilitario.cpp"
 
 using namespace std;
 
-int usuarioLogado = 1;
+int usuarioLogado = 0;
 
 //Definicoes das funcoes basicas do sistema.
 void usuarios();
@@ -31,30 +33,30 @@ void cadastraUsuario();
 void exibeMensagem(string mensagem);
 void exibeMensagemErro(string mensagem);
 void exibeMenu();
+void exibeSubmenuCadastroUsuario();
+void exibeMenuUsuario();
 void exibeMenuVisitante();
 
 int main() {
-    if (usuarioLogado) {
-        exibeMenu();
-    } else {
-        exibeMenuVisitante();
-    }
-
+    exibeMenu();
     return 0;
 }
 
-void exibeMensagem(string mensagem) {
-    cout << "\033[1;32m" << "--- " << mensagem << " ---" << "\033[0m\n\n";
-}
-
-void exibeMensagemErro(string mensagem) {
-    cout << "\033[1;31m" << "--- " << mensagem << " ---" << "\033[0m\n\n";
+/**
+ * Exibe o menu de acordo com usuario logado.
+ */
+void exibeMenu() {
+    if (usuarioLogado) {
+        exibeMenuUsuario();
+    } else {
+        exibeMenuVisitante();
+    }
 }
 
 /**
  * Exibe o menu principal da aplicacao caso o usuario esteja logado.
  */
-void exibeMenu() {
+void exibeMenuUsuario() {
     int opcao;
 
     while (opcao != M_SAIR) {
@@ -75,7 +77,7 @@ void exibeMenu() {
         switch (opcao) {
             case M_SAIR:
                 exibeMensagem("Ate breve... :)");
-                break;
+                exit(EXIT_SUCCESS);
             default:
                 exibeMensagemErro("Opcao invalida!");
         }
@@ -101,10 +103,38 @@ void exibeMenuVisitante() {
 
         switch (opcao) {
             case MV_CADASTRO_USUARIO:
-                cadastraUsuario();
+                exibeSubmenuCadastroUsuario();
                 break;
             case MV_SAIR:
                 exibeMensagem("Ate breve... :)");
+                exit(EXIT_SUCCESS);
+            default:
+                exibeMensagemErro("Opcao invalida!");
+        }
+    }
+}
+
+/**
+ * Exibe o submenu de cadastro de usuario.
+ */
+void exibeSubmenuCadastroUsuario() {
+    int opcao;
+
+    while (opcao != 2) {
+        cout << " .::. PrompSkoob .::." << endl;
+        cout << " - Quero me Cadastrar - " << endl << endl;
+        cout << " (1) Quero criar minha conta" << endl;
+        cout << " (2) Voltar para o menu principal" << endl << endl;
+        cout << "Opcao: ";
+        cin >> opcao;
+
+        switch (opcao) {
+            case 1:
+                cadastroUsuario();
+                opcao = 2;
+                break;
+            case 2:
+                exibeMenu();
                 break;
             default:
                 exibeMensagemErro("Opcao invalida!");
