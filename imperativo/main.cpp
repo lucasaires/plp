@@ -79,6 +79,11 @@ void exibeMenuUsuario() {
             case M_EDITAR_PERFIL:
                 exibeEdicaoPerfilUsuario();
                 break;
+            case M_SAIR_CONTA:
+                estaLogado = 0;
+                usuario.id = 0;
+                exibeMenu();
+                break;
             case M_SAIR:
                 exibeMensagem("Ate breve... :)");
                 exit(EXIT_SUCCESS);
