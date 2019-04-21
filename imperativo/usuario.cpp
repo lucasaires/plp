@@ -8,8 +8,8 @@
 using namespace std;
 
 int cadastroUsuario();
-
 int edicaoPerfilUsuario(struct Usuario &usuario);
+int remocaoUsuario(int id);
 
 /**
  * Exibe o formulario de cadastro de usuario.
@@ -159,6 +159,22 @@ int edicaoPerfilUsuario(struct Usuario &usuario) {
 
     if (!retorno) {
         exibeMensagem("Perfil editado com sucesso.");
+    }
+
+    return retorno;
+}
+
+/**
+ * Remove o perfil do usuario atual.
+ *
+ * @param id
+ * @return 0 (sucesso) e 1 (erro)
+ */
+int remocaoUsuario(int id) {
+    int retorno = removeUsuario(id);
+
+    if(!retorno) {
+        exibeMensagem("Usuario removido com sucesso.");
     }
 
     return retorno;
