@@ -16,10 +16,14 @@
 #include <string>
 #include "constantes.cpp"
 #include "livrosdb.cpp"
+#include "usuario.cpp"
+#include "utilitario.cpp"
+#include "pesquisas.cpp"
 
 using namespace std;
 
-int usuarioLogado = 1;
+int estaLogado = 0;
+struct Usuario usuario;
 
 //Definicoes das funcoes basicas do sistema.
 void usuarios();
@@ -28,39 +32,39 @@ void minhaEstante();
 void pesquisas();
 void recomendacoes();
 void cadastraUsuario();
-void exibeMensagem(string mensagem);
-void exibeMensagemErro(string mensagem);
 void exibeMenu();
+void exibeMenuUsuario();
 void exibeMenuVisitante();
+void exibeAutenticacaoUsuario();
+void exibeCadastroUsuario();
+void exibeEdicaoPerfilUsuario();
 
 int main() {
-    if (usuarioLogado) {
-        exibeMenu();
-    } else {
-        exibeMenuVisitante();
-    }
-
+    exibeMenu();
     return 0;
 }
 
-void exibeMensagem(string mensagem) {
-    cout << "\033[1;32m" << "--- " << mensagem << " ---" << "\033[0m\n\n";
-}
-
-void exibeMensagemErro(string mensagem) {
-    cout << "\033[1;31m" << "--- " << mensagem << " ---" << "\033[0m\n\n";
+/**
+ * Exibe o menu de acordo com usuario logado.
+ */
+void exibeMenu() {
+    if (estaLogado) {
+        exibeMenuUsuario();
+    } else {
+        exibeMenuVisitante();
+    }
 }
 
 /**
  * Exibe o menu principal da aplicacao caso o usuario esteja logado.
  */
-void exibeMenu() {
+void exibeMenuUsuario() {
     int opcao;
 
     while (opcao != M_SAIR) {
         cout << " .::. PrompSkoob .::." << endl;
         cout << " - Menu Principal - " << endl;
-        cout << " Ola, NOME USUARIO!" << endl << endl;
+        cout << " Ola, " << usuario.nome << "!" << endl << endl;
         cout << " (1) Editar meu perfil" << endl;
         cout << " (2) Gerenciar livros" << endl;
         cout << " (3) Minha estante" << endl;
@@ -73,9 +77,17 @@ void exibeMenu() {
         cin >> opcao;
 
         switch (opcao) {
+            case M_EDITAR_PERFIL:
+                exibeEdicaoPerfilUsuario();
+                break;
+            case M_SAIR_CONTA:
+                estaLogado = 0;
+                usuario.id = 0;
+                exibeMenu();
+                break;
             case M_SAIR:
                 exibeMensagem("Ate breve... :)");
-                break;
+                exit(EXIT_SUCCESS);
             default:
                 exibeMensagemErro("Opcao invalida!");
         }
@@ -101,14 +113,46 @@ void exibeMenuVisitante() {
 
         switch (opcao) {
             case MV_CADASTRO_USUARIO:
-                cadastraUsuario();
+                exibeCadastroUsuario();
+                break;
+            case MV_AUTENTICACAO:
+                exibeAutenticacaoUsuario();
                 break;
             case MV_SAIR:
                 exibeMensagem("Ate breve... :)");
-                break;
+                exit(EXIT_SUCCESS);
             default:
                 exibeMensagemErro("Opcao invalida!");
         }
+    }
+}
+
+/**
+ * Exibe cadastro de usuario.
+ */
+void exibeCadastroUsuario() {
+    if(cadastroUsuario()) {
+        exibeMenu();
+    }
+}
+
+/**
+ * Exibe autenticacao de usuario.
+ */
+void exibeAutenticacaoUsuario() {
+    usuario = autenticacaoUsuario();
+
+    if (usuario.id > 0) {
+        estaLogado = 1;
+        exibeMenu();
+    } else {
+        estaLogado = 0;
+    }
+}
+
+void exibeEdicaoPerfilUsuario() {
+    if (edicaoPerfilUsuario(usuario)) {
+        exibeMenu();
     }
 }
 
@@ -166,17 +210,13 @@ void realizarLogin() {
 
 }
 
-//Falta implementacao
 void pesquisas() {
     int opcao; 
-    const int AUTOR = 1;
-    const int LIVRO = 2;
-    const int GENERO = 3;
 
     cout << "Digite a opção de Pesquisa de sua preferência: " << endl;
-    cout << "Pesquisa por (1)Autor: " << endl;
-    cout << "Pesquisa por (2)Livro: " << endl;
-    cout << "Pesquisa por (3)Gênero:" << endl;
+    cout << "Pesquisa por Autor[1]: " << endl;
+    cout << "Pesquisa por Titulo[2]: " << endl;
+    cout << "Pesquisa por Gênero[3]:" << endl;
     cin >> opcao;
 
     switch (opcao)
@@ -185,8 +225,8 @@ void pesquisas() {
             pesquisasAutor();
             break;
         
-        case LIVRO:
-            pesquisasLivro();
+        case TITULO:
+            pesquisasTitulo();
             break;
         
         case GENERO:
@@ -197,31 +237,11 @@ void pesquisas() {
             cout << "Opcao inválida" << endl;
             break;
     }
-}
 
-void pesquisasAutor() {
-    string pesquisa;
-    cout << "Digite o nome do Autor: " << endl;
-
-    cin >> pesquisa;
-
-}
-
-void pesquisasLivro() {
-    string pesquisa;
-    cout << "Digite o nome do Livro: " << endl; 
-
-    cin >> pesquisa;
-
-}
-
-void pesquisasGenero() {
-    string pesquisa;
-    cout << "Digite o nome do gênero: " << endl;
-
-    cin >> pesquisa;
     
 }
+
+
 
 //Falta implementacao
 void recomendacoes() {
