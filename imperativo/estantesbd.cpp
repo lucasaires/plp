@@ -12,16 +12,13 @@ void criaTabelaEstantes(){
 	string mensagemErro = "Ocorreu um erro ao criar a tabela de Estantes: ";
 	
 	if (retorno) {
-		cerr << "Não foi possível abir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
+		cerr << "Nï¿½o foi possï¿½vel abir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
 	}
 	
 	string sql = "CREATE TABLE IF NOT EXISTS estantes("
-                 "isbn INT PRIMARY KEY NOT NULL, "
-                 "nome TEXT NOT NULL, "
-                 "escritor TEXT NOT NULL, "
-                 "paginas INT NOT NULL, "
-                 "paginasLidas INT NOT NULL, "
-				 "genero INT NOT NULL);";
+                 "idEstante INT PRIMARY KEY NOT NULL, "
+                 "idUsuario INT FOREIGN KEY NOT NULL, "
+                 "idLivro INT );";
 				 
     retorno = sqlite3_exec(bancoDados, sql.c_str(), NULL, 0, &erroBanco);
     
@@ -33,21 +30,21 @@ void criaTabelaEstantes(){
 	sqlite3_close(bancoDados);
 }
 
-int consultaEstante(vector<Livro> &estante, int id){
+int consultaEstante(int idUsuario){
     sqlite3 *bancoDados;
     sqlite3_stmt *stmt;
     int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
     string mensagemErro = "Ocorreu um erro ao consultar a estante: ";
 
     if (retorno != SQLITE_OK) {
-        cerr << "Não foi possível abrir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
+        cerr << "Nï¿½o foi possï¿½vel abrir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
         sqlite3_finalize(stmt);
         sqlite3_close(bancoDados);
 
         return 1;
     }
 
-    string sql = "SELECT * FROM estante WHERE id = " + to_string(id) + ";";
+    string sql = "SELECT idLivro FROM estantes WHERE idUsuario = " + to_string(idUsuario) + ";";
     retorno = sqlite3_prepare(bancoDados, sql.c_str(), -1, &stmt, NULL);
 
     if (retorno != SQLITE_OK) {
@@ -71,10 +68,10 @@ int consultaEstante(vector<Livro> &estante, int id){
             return 1;
         }
 
-        const char *idEstante = reinterpret_cast<const char *>(sqlite3_column_text(stmt, E_ID));
+        const char *idLivro = reinterpret_cast<const char *>(sqlite3_column_text(stmt, E_LIVRO));
         
 
-        livros.push_back(idEstantes);
+        livros.push_back(idEstante);
 
     }
 
@@ -92,7 +89,7 @@ int insereEstante(int id, vector<Livros> estante){
     //string interessesFormatado = formataInteresses(interesses);
 
     if (retorno != SQLITE_OK) {
-        cerr << "Não foi possível abrir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
+        cerr << "Nï¿½o foi possï¿½vel abrir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
         sqlite3_close(bancoDados);
 
         return 1;
@@ -124,7 +121,7 @@ int removeEstante(int id)
     string mensagemErro = "Ocorreu um erro ao remover estante: ";
 
     if (retorno != SQLITE_OK) {
-        cerr << "Não foi possível abrir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
+        cerr << "Nï¿½o foi possï¿½vel abrir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
         sqlite3_close(bancoDados);
 
         return 1;

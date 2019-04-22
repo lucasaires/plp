@@ -2,7 +2,7 @@
  * MinhaEstante2.cpp
  *
  *  Created on: 17 de abr de 2019
- *      Author: Álex Micaela
+ *      Author: ï¿½lex Micaela
  */
 
 #include <iostream>
@@ -37,6 +37,7 @@ void adicionaLivroMinhaEst(vector<Livro> &estante, string ISBN, string nome, str
 	estante.push_back(livro);
 	insertionSort(estante);
 }
+
 
 int removerLivroMinhaEst(vector<Livro> &estante, string isbn){
 	int indexParaRemover = -1;
