@@ -28,3 +28,13 @@ const int U_INTERESSES = 4;
  */
 const int E_USUARIO = 0;
 const int E_LIVRO = 1;
+
+/**
+ * status de leitura.
+ */
+const int N_LIDO = 1;
+const int LENDO = 2;
+const int LIDO = 3;
+
+
+ 

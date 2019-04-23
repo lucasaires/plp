@@ -12,7 +12,7 @@ void criaTabelaEstantes(){
 	string mensagemErro = "Ocorreu um erro ao criar a tabela de Estantes: ";
 	
 	if (retorno) {
-		cerr << "N�o foi poss�vel abir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
+		cerr << "Nao foi possivel abir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
 	}
 	
 	string sql = "CREATE TABLE IF NOT EXISTS estantes("
@@ -37,7 +37,7 @@ int consultaEstante(int idUsuario){
     string mensagemErro = "Ocorreu um erro ao consultar a estante: ";
 
     if (retorno != SQLITE_OK) {
-        cerr << "N�o foi poss�vel abrir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
+        cerr << "Nao foi possivel abrir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
         sqlite3_finalize(stmt);
         sqlite3_close(bancoDados);
 
@@ -88,7 +88,7 @@ int insereEstante(int idUsuario, int idLivro){
     string mensagemErro = "Ocorreu um erro ao inserir estante: ";
 
     if (retorno != SQLITE_OK) {
-        cerr << "N�o foi poss�vel abrir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
+        cerr << "Nao foi possivel abrir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
         sqlite3_close(bancoDados);
 
         return 1;
@@ -120,7 +120,7 @@ int removeEstante(int idUsuario,  int idLivro)
     string mensagemErro = "Ocorreu um erro ao remover estante: ";
 
     if (retorno != SQLITE_OK) {
-        cerr << "N�o foi poss�vel abrir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
+        cerr << "Nao foi possivel abrir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
         sqlite3_close(bancoDados);
 
         return 1;
@@ -143,5 +143,13 @@ int removeEstante(int idUsuario,  int idLivro)
     return 0;
 }
 
-//int listaTodosLivrosMinhaEst(int idUsuario, vector<vector<string>> livros)
-// METODO PARA LISTAR TODOS OS LIVROS DA MINHA ESTANTE
+/**
+ * int listaTodosLivrosMinhaEst(int idUsuario, vector<vector<string>> livros)
+ *  METODO PARA LISTAR TODOS OS LIVROS DA MINHA ESTANTE
+ */
+ 
+ /**
+  * int mudarStatus(int idUsuario, int idLivro, string status)
+  * METODO PARA MUDAR O STATUS DE LEITURA DE UM CERTO LIVRO NA MINHA ESTANTE (NAO LIDO, LENDO, LIDO)
+  */
+ 
