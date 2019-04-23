@@ -22,6 +22,9 @@ const int U_EMAIL = 2;
 const int U_SENHA = 3;
 const int U_INTERESSES = 4;
 
-const int E_ID = 0;
-const int E_USUARIO = 1;
-const int E_LIVRO = 2;
+
+/**
+ * Indices do array tipo estante.
+ */
+const int E_USUARIO = 0;
+const int E_LIVRO = 1;

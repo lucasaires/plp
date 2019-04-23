@@ -6,16 +6,13 @@
 
 using namespace std;
 
-void visualizarMinhaEstante();
-int removerLivroMinhaEst();
-int adicionaLivroMinhaEst();
+void visualizarMinhaEstante(int idUsuario);
+int removerLivroMinhaEst(int idUsuario);
+int adicionaLivroMinhaEst(int idUsuario);
 int mudarStatusLeitura();
-int insertionSort();
-void swapLivros();
 void printandoLivros(vector<vector<string>> livros);
 
-int adicionaLivroMinhaEst(){
-    int idUsuario;
+int adicionaLivroMinhaEst(int idUsuario){
     int idLivro;
     int retorno;
     int opcao; 
@@ -48,6 +45,11 @@ int adicionaLivroMinhaEst(){
         case 4:
             listaTodosLivros(livros);
             cout << "Livros cadastrados na biblioteca do PrompSkoob: " << endl << "id - titulo";
+           
+            if (livros.size() == 0){
+                cout << "Sem livros cadastrados na biblioteca do PrompSkoob" << endl;
+            }
+
             printandoLivros(livros);
     
         default:
@@ -58,23 +60,60 @@ int adicionaLivroMinhaEst(){
     cout << "insira o id do livro que você quer cadastrar na sua estante: ";
     cin >> idLivro;
 
-    idUsuario = obtemID();
-
-    insereEstante(idEstante, idLivro);
+    insereEstante(idUsuario, idLivro);
 
     return 0;
+}
+
+int removerLivroMinhaEst(int idUsuario){
+    int idLivro;
+    vector<vector<string>> livros;
+
+    cout << " .::. PrompSkoob .::." << endl;
+    cout << " - Removendo livros da minha estante - " << endl << endl;
+
+    cout << "Livros da sua estante:" << endl;
+    listaTodosLivrosMinhaEst(idUsuario, livros); //METODO DO BANCO DE DADOS DE ESTANTES
+    
+    if(livros.size() == 0){
+        cout << "Estante vazia." << endl;
+    }
+
+    printandoLivros(livros);
+
+    cout << "insira o id do livro que você quer remover da sua estante: ";
+    cin >> idLivro;
+
+    removeEstante(idUsuario, idLivro);
+
+    return 0;
+}
+
+int mudarStatusLeitura(){
+    
+    
+    return 0;
+}
+
+void visualizarMinhaEstante(int idUsuario){
+    vector<vector<string>> livros;
+    listaTodosLivrosMinhaESt(idUsuario, livros);
+
+    if(livros.size() == 0){
+        cout << "Estante vazia." << endl;
+    }
+    
+    printandoLivros(livros);
 }
 
 void printandoLivros(vector<vector<string>> livros){
     int indexIdLivro = 0;
     int indexNomeLivro = 2;
-
-    if(livros.size() == 0){
-        cout << "Sem livros cadastrados na biblioteca do PrompSkoob" << endl;
-    }
+    string linha = "";
 
     for(size_t i = 0; i < livros.size(); i++){
-        cout << livros.at(i).at(indexIdLivro) << " - " << livros.at(i).at(indexNomeLivro) << endl;
+        linha = livros.at(i).at(indexIdLivro) + " - " + livros.at(i).at(indexNomeLivro)
+        cout << linha << endl;
     }
-    
-}
+
+    }

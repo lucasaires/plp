@@ -17,7 +17,8 @@ void criaTabelaEstantes(){
 	
 	string sql = "CREATE TABLE IF NOT EXISTS estantes("
                  "idUsuario INT FOREIGN KEY NOT NULL, "
-                 "idLivro INT );";
+                 "idLivro INT ), ";
+                 "paginasLidas INT);";
 				 
     retorno = sqlite3_exec(bancoDados, sql.c_str(), NULL, 0, &erroBanco);
     
@@ -111,7 +112,7 @@ int insereEstante(int idUsuario, int idLivro){
     return 0;
 }
 
-int removeEstante(int id)
+int removeEstante(int idUsuario,  int idLivro)
 {
     sqlite3 *bancoDados;
     char *erroBanco;
@@ -125,7 +126,7 @@ int removeEstante(int id)
         return 1;
     }
 
-    string sql = "DELETE FROM estantes WHERE id = " + to_string(id) + ";";
+    string sql = "DELETE FROM estantes WHERE idUsuario = " + to_string(idUsuario) + " AND idLivro =" + to_string(idLivro) + ";";
 
     retorno = sqlite3_exec(bancoDados, sql.c_str(), NULL, 0, &erroBanco);
 
@@ -142,3 +143,5 @@ int removeEstante(int id)
     return 0;
 }
 
+//int listaTodosLivrosMinhaEst(int idUsuario, vector<vector<string>> livros)
+// METODO PARA LISTAR TODOS OS LIVROS DA MINHA ESTANTE
