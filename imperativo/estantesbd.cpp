@@ -16,7 +16,6 @@ void criaTabelaEstantes(){
 	}
 	
 	string sql = "CREATE TABLE IF NOT EXISTS estantes("
-                 "idEstante INT PRIMARY KEY NOT NULL, "
                  "idUsuario INT FOREIGN KEY NOT NULL, "
                  "idLivro INT );";
 				 
@@ -81,12 +80,11 @@ int consultaEstante(int idUsuario){
     return 0;
 }
 
-int insereEstante(int id, vector<Livros> estante){
+int insereEstante(int idUsuario, int idLivro){
     sqlite3 *bancoDados;
     char *erroBanco;
     int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
     string mensagemErro = "Ocorreu um erro ao inserir estante: ";
-    //string interessesFormatado = formataInteresses(interesses);
 
     if (retorno != SQLITE_OK) {
         cerr << "N�o foi poss�vel abrir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
@@ -95,8 +93,8 @@ int insereEstante(int id, vector<Livros> estante){
         return 1;
     }
 
-    string sql = "INSERT INTO estante(id, estantes) "
-                 "VALUES('" + to_string(id) + "', '" + estante + "');";
+    string sql = "INSERT INTO estante(idEstante, idUsuario, idLivro) "
+                 "VALUES('" + to_string(idUsuario) + "', '" + to_string(idLivro) + "');";
 
     retorno = sqlite3_exec(bancoDados, sql.c_str(), NULL, 0, &erroBanco);
 

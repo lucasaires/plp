@@ -1,101 +1,80 @@
-/*
- * MinhaEstante2.cpp
- *
- *  Created on: 17 de abr de 2019
- *      Author: �lex Micaela
- */
-
 #include <iostream>
 #include <vector>
+#include "livrosdb.cpp"
+#include "pesquisas.cpp"
+#include "usuariodb.cpp"
 
 using namespace std;
 
-struct Livro{
-	string ISBN;
-	string nome;
-	string autor;
-	int paginas;
-	string genero;
-	int paginasLidas;
-};
+void visualizarMinhaEstante();
+int removerLivroMinhaEst();
+int adicionaLivroMinhaEst();
+int mudarStatusLeitura();
+int insertionSort();
+void swapLivros();
+void printandoLivros(vector<vector<string>> livros);
 
-void visualizarMinhaEstante(vector<Livro> &estante);
-int removerLivroMinhaEst(vector<Livro> &estante, string ISBN);
-void adicionaLivroMinhaEst(vector<Livro> &estante, string ISBN, string nome, string autor, int paginas, string genero, int paginasLidas);
-int mudarStatusLeitura(vector<Livro> &estante, int paginasLidas, string ISBN);
-int insertionSort(vector<Livro> &estante);
-void swapLivros(vector<Livro> &estante, int i, int j);
+int adicionaLivroMinhaEst(){
+    int idUsuario;
+    int idLivro;
+    int retorno;
+    int opcao; 
 
-void adicionaLivroMinhaEst(vector<Livro> &estante, string ISBN, string nome, string autor, int paginas, string genero, int paginasLidas){
-	Livro livro;
-	livro.ISBN = ISBN;
-	livro.nome = nome;
-	livro.autor = autor;
-	livro.paginas = paginas;
-	livro.genero = genero;
-	livro.paginasLidas= paginasLidas;
-	estante.push_back(livro);
-	insertionSort(estante);
+    cout << " .::. PrompSkoob .::." << endl;
+    cout << " - Adicionando livros a minha estante - " << endl << endl;
+
+    vector<vector<string>> livros;
+
+    cout << "Digite a opção de Pesquisa de sua preferência: " << endl;
+    cout << "Pesquisa por Autor[1]: " << endl;
+    cout << "Pesquisa por Titulo[2]: " << endl;
+    cout << "Pesquisa por Gênero[3]: " << endl;
+    cout << "Listar todos os Livros[4]: " << endl;
+    cin >> opcao;
+
+    switch (opcao){
+        case 1:
+            pesquisasAutor();
+            break;
+        
+        case 2:
+            pesquisasTitulo();
+            break;
+        
+        case 3:
+            pesquisasGenero();
+            break;
+
+        case 4:
+            listaTodosLivros(livros);
+            cout << "Livros cadastrados na biblioteca do PrompSkoob: " << endl << "id - titulo";
+            printandoLivros(livros);
+    
+        default:
+            cout << "Opcao inválida" << endl;
+            break;
 }
 
+    cout << "insira o id do livro que você quer cadastrar na sua estante: ";
+    cin >> idLivro;
 
-int removerLivroMinhaEst(vector<Livro> &estante, string isbn){
-	int indexParaRemover = -1;
-	int retorno = -1;
-	
-	for(int i = 0; i <= (int)estante.size() - 1; i++){
-		if (estante.at(i).ISBN == isbn){
-			indexParaRemover = i;
-			break;
-		}
+    idUsuario = obtemID();
 
-	if(indexParaRemover > -1) {
-		estante.erase(estante.begin() + indexParaRemover);
-		retorno = 1;
-	} else {
-		retorno = 0;
-		}
-	}
-	return retorno;
+    insereEstante(idEstante, idLivro);
+
+    return 0;
 }
 
-int mudarStatusLeitura(vector<Livro> &estante, int paginasLidas, string ISBN){
-	int indexParaAtualizar = -1;
-	int retorno = -1;
-	
-	for(int i = 0; i < (int)estante.size(); i++){
-		if (estante.at(i).ISBN == ISBN){
-			indexParaAtualizar = i;
-			break;
-		}
-	}
-	
-	if(indexParaAtualizar > -1){
-		estante.at(indexParaAtualizar).paginasLidas += paginasLidas;
-		retorno = 1;
-	} else {
-		retorno = 0;
-	}
-	return retorno;
-}
+void printandoLivros(vector<vector<string>> livros){
+    int indexIdLivro = 0;
+    int indexNomeLivro = 2;
 
-void visualizarMinhaEstante(vector<Livro> estante){
-	
-}
+    if(livros.size() == 0){
+        cout << "Sem livros cadastrados na biblioteca do PrompSkoob" << endl;
+    }
 
-int insertionSort(vector<Livro> &estante){
-	int indexNewLivro = estante.size() - 1;
-	for(int i = estante.size() - 1; i >= 0; i--){
-		if(estante.at(indexNewLivro).ISBN < estante.at(i).ISBN){
-			swapLivros(estante, i, indexNewLivro);
-			indexNewLivro--;
-		}
-	}
-	return 0;
-}
-
-void swapLivros(vector<Livro> &estante, int i, int j){
-	Livro aux = estante.at(i);
-	estante.at(i) = estante.at(j);
-	estante.at(j) = aux;
+    for(size_t i = 0; i < livros.size(); i++){
+        cout << livros.at(i).at(indexIdLivro) << " - " << livros.at(i).at(indexNomeLivro) << endl;
+    }
+    
 }
