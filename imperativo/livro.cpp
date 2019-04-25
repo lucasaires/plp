@@ -13,7 +13,7 @@ vector<struct Livro> livros;
 int adicionaLivro(struct Usuario usuario);
 int cadastroLivro();
 int edicaoLivro();
-void escolheLivro(struct Livro &livro);
+void escolheLivro(vector<struct Livro> livros, struct Livro &livro);
 void listagemLivros();
 struct Livro localizaLivroPorID(vector<struct Livro> livros, int id);
 string obtemGenerosExistentes(struct Livro &livro);
@@ -34,7 +34,7 @@ int adicionaLivro(struct Usuario usuario) {
         cout << " .::. PrompSkoob .::." << endl;
         cout << " - Adicionar Livro na Estante  - " << endl << endl;
         livro.id = 0;
-        escolheLivro(livro);
+        escolheLivro(livros, livro);
         retorno = adicionaLivroEstante(usuario.id, livro.id);
 
         if (!retorno)
@@ -83,9 +83,8 @@ int cadastroLivro() {
 
     retorno = insereLivro(livro);
 
-    if (!retorno) {
+    if (!retorno)
         exibeMensagem("Livro criado com sucesso.");
-    }
 
     return retorno;
 }
@@ -105,7 +104,7 @@ int edicaoLivro() {
 
     cout << " .::. PrompSkoob .::." << endl;
     cout << " - Editar Livro - " << endl << endl;
-    escolheLivro(livro);
+    escolheLivro(livros, livro);
 
     cout << "Qual campo deseja modificar?" << endl;
     cout << "(1) Nome: " << livro.nome << endl;
@@ -252,7 +251,7 @@ int remocaoLivro() {
 
     cout << " .::. PrompSkoob .::." << endl;
     cout << " - Remover Livro - " << endl << endl;
-    escolheLivro(livro);
+    escolheLivro(livros, livro);
 
     char confirmacao;
     cout << "Deseja realmente remover este livro? (S/N) : ";
@@ -275,7 +274,7 @@ int remocaoLivro() {
  * Escolhe o livro de acordo com ID do livro.
  * @param livro
  */
-void escolheLivro(struct Livro &livro) {
+void escolheLivro(vector<struct Livro> livros, struct Livro &livro) {
     int idLivro;
 
     while (livro.id == 0) {

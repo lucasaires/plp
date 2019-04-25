@@ -6,7 +6,10 @@
 using namespace std;
 
 vector<struct Estante> estantes;
+
 void listagemEstantes(struct Usuario &usuario);
+int mudaSituacao(struct Usuario &usuario);
+vector<Livro> obtemLivrosEstante(vector<struct Estante> estantes);
 string obtemSituacao(int status);
 
 /**
@@ -27,6 +30,45 @@ void listagemEstantes(struct Usuario &usuario) {
             cout << endl;
         }
     }
+}
+
+/**
+ * Muda a situacao do livro da estante.
+ *
+ * @param usuario
+ * @return 0 (sucesso) e 1 (erro)
+ */
+int mudaSituacao(struct Usuario &usuario) {
+    int retorno, situacao;
+
+    struct Livro livro;
+    cout << " .::. PrompSkoob .::." << endl;
+    cout << " - Mudar Status de Leitura  - " << endl << endl;
+    livro.id = 0;
+    escolheLivro(obtemLivrosEstante(usuario.estantes), livro);
+    cout << "Digite o status de leitura do livro (Nao Lido[1], Lendo[2], Lido[3], Abandonei[4]) : ";
+    cin >> situacao;
+    retorno = mudarSituacao(usuario.id, livro.id, situacao);
+
+    if (!retorno)
+        exibeMensagem("O status da leitura modificado com sucesso.");
+
+    return retorno;
+}
+
+/**
+ * Retorna todos os livros adicionados na estante.
+ *
+ * @param estantes
+ * @return
+ */
+vector<Livro> obtemLivrosEstante(vector<struct Estante> estantes) {
+    vector<Livro> livros;
+
+    for (size_t indice = 0; indice < estantes.size(); indice++)
+        livros.push_back(estantes.at(indice).livro);
+
+    return livros;
 }
 
 /**

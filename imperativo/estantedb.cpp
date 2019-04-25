@@ -9,6 +9,7 @@ using namespace std;
 
 int adicionaLivroEstante(int idUsuario, int idLivro);
 void criaTabelaEstante();
+int mudarSituacao(int idUsuario, int idLivro, int situacao);
 
 void criaTabelaEstante() {
     sqlite3 *bancoDados;
@@ -135,6 +136,45 @@ int listaLivrosEstante(struct Usuario &usuario) {
     }
 
     sqlite3_finalize(stmt);
+    sqlite3_close(bancoDados);
+
+    return 0;
+}
+
+/**
+ * Muda a situacao do livro.
+ *
+ * @param idUsuario
+ * @param idLivro
+ * @param situacao
+ * @return 0 (sucesso) e 1 (error)
+ */
+int mudarSituacao(int idUsuario, int idLivro, int situacao) {
+    sqlite3 *bancoDados;
+    char *erroBanco;
+    int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
+    string mensagemErro = "Ocorreu um erro ao modificar situacao do livro: ";
+
+    if (retorno != SQLITE_OK) {
+        exibeMensagemErroBancoDados("Não foi possível abrir o banco de dados: ", sqlite3_errmsg(bancoDados));
+        sqlite3_close(bancoDados);
+
+        return 1;
+    }
+
+    string sql = "UPDATE estante SET situacao = " + to_string(situacao) + " WHERE id_livro = " + to_string(idLivro) +
+                 " AND id_usuario = " + to_string(idUsuario) + ";";
+
+    retorno = sqlite3_exec(bancoDados, sql.c_str(), NULL, 0, &erroBanco);
+
+    if (retorno != SQLITE_OK) {
+        exibeMensagemErroBancoDados(mensagemErro, sqlite3_errmsg(bancoDados));
+        sqlite3_free(erroBanco);
+        sqlite3_close(bancoDados);
+
+        return 1;
+    }
+
     sqlite3_close(bancoDados);
 
     return 0;
