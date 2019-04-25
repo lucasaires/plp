@@ -12,11 +12,10 @@
  */
 
 #include <iostream>
-#include <stdio.h>
 #include <string>
 #import "constantes.cpp"
-#import "livrosdb.cpp"
 #import "usuario.cpp"
+#import "livro.cpp"
 #import "utilitario.cpp"
 
 using namespace std;
@@ -24,19 +23,10 @@ using namespace std;
 int estaLogado = 0;
 struct Usuario usuario;
 
-//Definicoes das funcoes basicas do sistema.
-void usuarios();
-void livros();
-void minhaEstante();
-void pesquisas();
-void recomendacoes();
-void cadastraUsuario();
 void exibeMenu();
 void exibeMenuUsuario();
 void exibeMenuVisitante();
 void exibeAutenticacaoUsuario();
-void exibeCadastroUsuario();
-void exibeEdicaoPerfilUsuario();
 void exibeRemoveUsuario();
 
 int main() {
@@ -66,7 +56,7 @@ void exibeMenuUsuario() {
         cout << " - Menu Principal - " << endl;
         cout << " Ola, " << usuario.nome << "!" << endl << endl;
         cout << " (1) Editar meu perfil" << endl;
-        cout << " (2) Gerenciar livros" << endl;
+        cout << " (2) Cadastrar livro" << endl;
         cout << " (3) Minha estante" << endl;
         cout << " (4) Pesquisar no acervo" << endl;
         cout << " (5) Recomendações de livros" << endl;
@@ -78,7 +68,10 @@ void exibeMenuUsuario() {
 
         switch (opcao) {
             case M_EDITAR_PERFIL:
-                exibeEdicaoPerfilUsuario();
+                if (edicaoPerfilUsuario(usuario)) exibeMenu();
+                break;
+            case M_CADASTRAR_LIVRO:
+                if (cadastroLivro()) exibeMenu();
                 break;
             case M_REMOVER_PERFIL:
                 exibeRemoveUsuario();
@@ -116,7 +109,7 @@ void exibeMenuVisitante() {
 
         switch (opcao) {
             case MV_CADASTRO_USUARIO:
-                exibeCadastroUsuario();
+                if (cadastroUsuario()) exibeMenu();
                 break;
             case MV_AUTENTICACAO:
                 exibeAutenticacaoUsuario();
@@ -131,15 +124,6 @@ void exibeMenuVisitante() {
 }
 
 /**
- * Exibe cadastro de usuario.
- */
-void exibeCadastroUsuario() {
-    if (cadastroUsuario()) {
-        exibeMenu();
-    }
-}
-
-/**
  * Exibe autenticacao de usuario.
  */
 void exibeAutenticacaoUsuario() {
@@ -150,12 +134,6 @@ void exibeAutenticacaoUsuario() {
         exibeMenu();
     } else {
         estaLogado = 0;
-    }
-}
-
-void exibeEdicaoPerfilUsuario() {
-    if (edicaoPerfilUsuario(usuario)) {
-        exibeMenu();
     }
 }
 
@@ -177,67 +155,4 @@ void exibeRemoveUsuario() {
     }
 
     exibeMenu();
-}
-
-//Falta implementacao
-void cadastrar() {
-
-    string nome;
-    cout << "Digite o seu nome:" << endl;
-    cin >> nome;
-
-    string login;
-    cout << "Digite o seu login:" << endl;
-    cin >> login;
-
-    int senha;
-    cout << "Digite a sua senha númerica:" << endl;
-    cin >> senha;
-
-
-}
-
-//Falta implementacao
-void CadastarLivros() {
-
-    string nome;
-    cout << "Digite o nome do Livro:" << endl;
-    cin >> nome;
-
-    string autor;
-    cout << "Digite o nome do Autor:" << endl;
-    cin >> autor;
-
-    int paginas;
-    cout << "Quantidade de paginas: " << endl;
-    cin >> paginas;
-
-    int genero;
-    cout << "Digite o genero do livro(Ficção[1] Romance[2] Não Ficção[3] Suspense[4]): " << endl;
-    cin >> genero;
-
-
-}
-
-//Falta implementacao
-void realizarLogin() {
-
-    string login;
-    cout << "Digite o seu login:" << endl;
-    cin >> login;
-
-    int senha;
-    cout << "Digite a sua senha:" << endl;
-    cin >> senha;
-
-
-}
-
-//Falta implementacao
-void pesquisas() {
-}
-
-//Falta implementacao
-void recomendacoes() {
-    
 }

@@ -2,7 +2,7 @@
 #include <string>
 #import "constantes.cpp"
 #import "utilitario.cpp"
-#import "usuario.model.cpp"
+#import "usuario.struct.cpp"
 #import "usuariodb.cpp"
 
 using namespace std;
