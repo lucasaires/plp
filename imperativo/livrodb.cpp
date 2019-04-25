@@ -7,6 +7,7 @@
 using namespace std;
 
 void criaTabelaLivro();
+int editaLivro(struct Livro &livro);
 int insereLivro(struct Livro &livro);
 int geraIDLivro();
 
@@ -39,6 +40,47 @@ void criaTabelaLivro() {
     }
 
     sqlite3_close(bancoDados);
+}
+
+/**
+ * Edita as informacoes de livro.
+ *
+ * @param livro
+ * @return 0 (sucesso) e 1 (erro)
+ */
+int editaLivro(struct Livro &livro) {
+    sqlite3 *bancoDados;
+    char *erroBanco;
+    int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
+    string mensagemErro = "Ocorreu um erro ao editar as informaçéos do livro: ";
+
+    if (retorno != SQLITE_OK) {
+        exibeMensagemErroBancoDados("Não foi possível abrir o banco de dados: ", sqlite3_errmsg(bancoDados));
+        sqlite3_close(bancoDados);
+
+        return 1;
+    }
+
+    string sql = "UPDATE livro "
+                 "SET nome = '" + livro.nome + "', autor = '" + livro.autor + "', paginas = " +
+                 to_string(livro.paginas) + ", ficcao = " + to_string(livro.ficcao) + ", nao_ficcao = " +
+                 to_string(livro.naoFiccao) + ", romance = " + to_string(livro.romance) + ", horror = " +
+                 to_string(livro.horror) + ", biografia = " + to_string(livro.biografia) + " WHERE id = " +
+                 to_string(livro.id) + ";";
+
+    retorno = sqlite3_exec(bancoDados, sql.c_str(), NULL, 0, &erroBanco);
+
+    if (retorno != SQLITE_OK) {
+        exibeMensagemErroBancoDados(mensagemErro, sqlite3_errmsg(bancoDados));
+        sqlite3_free(erroBanco);
+        sqlite3_close(bancoDados);
+
+        return 1;
+    }
+
+    sqlite3_close(bancoDados);
+
+    return 0;
 }
 
 /**
@@ -147,6 +189,7 @@ int listaLivros(vector<struct Livro> &livros) {
     sqlite3_stmt *stmt;
     int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
     string mensagemErro = "Ocorreu um erro ao listar livros: ";
+    livros.clear();
 
     if (retorno != SQLITE_OK) {
         cerr << "Não foi possível abrir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;

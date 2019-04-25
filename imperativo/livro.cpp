@@ -7,9 +7,13 @@
 
 using namespace std;
 
+vector<struct Livro> livros;
+
 int cadastroLivro();
+int edicaoLivro();
 void exibeMenuLivro();
 void listagemLivros();
+struct Livro localizaLivro(vector<struct Livro> livros, int id);
 string obtemGenerosExistentes(struct Livro &livro);
 
 /**
@@ -56,6 +60,105 @@ int cadastroLivro() {
 }
 
 /**
+ * Exibe a edicao do perfil do usuario.
+ *
+ * @param livro
+ * @return 0 (sucesso) e 1 (erro)
+ */
+int edicaoLivro() {
+    int retorno, campo, idLivro;
+    char genero;
+    char edicao = 'S';
+    struct Livro livro;
+    livro.id = 0;
+
+    cout << " .::. PrompSkoob .::." << endl;
+    cout << " - Editar Livro - " << endl << endl;
+
+    while (livro.id == 0) {
+        cout << "Qual livro deseja editar? Informe o ID: ";
+        cin >> idLivro;
+        cout << endl;
+        livro = localizaLivro(livros, idLivro);
+
+        if (livro.id == 0)
+            exibeMensagemErro("O ID informado invalido!");
+    }
+
+    cout << "Qual campo deseja modificar?" << endl;
+    cout << "(1) Nome: " << livro.nome << endl;
+    cout << "(2) Autor: " << livro.autor << endl;
+    cout << "(3) Total Paginas: " << livro.paginas << endl;
+    char ficcao = (livro.ficcao == 1) ? 'S' : 'N';
+    cout << "(4) Ficcao: " << ficcao << endl;
+    char naoFiccao = (livro.naoFiccao == 1) ? 'S' : 'N';
+    cout << "(5) Nao Ficcao: " << naoFiccao << endl;
+    char romance = (livro.romance == 1) ? 'S' : 'N';
+    cout << "(6) Romance: " << romance << endl;
+    char horror = (livro.horror == 1) ? 'S' : 'N';
+    cout << "(7) Horror: " << horror << endl;
+    char biografia = (livro.biografia == 1) ? 'S' : 'N';
+    cout << "(8) Biografia: " << biografia << endl;
+
+    while (edicao != 'N' && edicao != 'n') {
+        cout << "Campo: ";
+        cin >> campo;
+
+        switch (campo) {
+            case 1:
+                cout << "Nome: ";
+                getline(cin >> ws, livro.nome);
+                break;
+            case 2:
+                cout << "Autor: ";
+                getline(cin >> ws, livro.autor);
+                break;
+            case 3:
+                cout << "Total de Paginas: ";
+                cin >> livro.paginas;
+                break;
+            case 4:
+                cout << "Livro de ficcao? (S/N): ";
+                cin >> genero;
+                livro.ficcao = (genero == 's' || genero == 'S') ? 1 : 0;
+                break;
+            case 5:
+                cout << "Livro de nao ficcao? (S/N): ";
+                cin >> genero;
+                livro.naoFiccao = (genero == 's' || genero == 'S') ? 1 : 0;
+                break;
+            case 6:
+                cout << "Livro de romance? (S/N): ";
+                cin >> genero;
+                livro.romance = (genero == 's' || genero == 'S') ? 1 : 0;
+                break;
+            case 7:
+                cout << "Livro de horror? (S/N): ";
+                cin >> genero;
+                livro.horror = (genero == 's' || genero == 'S') ? 1 : 0;
+                break;
+            case 8:
+                cout << "Livro de biografia? (S/N): ";
+                cin >> genero;
+                livro.biografia = (genero == 's' || genero == 'S') ? 1 : 0;
+                break;
+            default:
+                exibeMensagemErro("Campo invalido!");
+        }
+
+        cout << "Deseja editar outro campo? (S/N): ";
+        cin >> edicao;
+    }
+
+    retorno = editaLivro(livro);
+
+    if (!retorno)
+        exibeMensagem("Livro editado com sucesso.");
+
+    return retorno;
+}
+
+/**
  * Exibe a listagem de livros juntamente com o submenu.
  * 1 - Cadastrar livros
  * 2 - Editar livro
@@ -78,6 +181,9 @@ void exibeMenuLivro() {
             case 1:
                 cadastroLivro();
                 break;
+            case 2:
+                edicaoLivro();
+                break;
             default:
                 if (opcao != 4)
                     exibeMensagemErro("Opcao invalida!");
@@ -89,8 +195,6 @@ void exibeMenuLivro() {
  * Lista todos os livros cadastrados no PrompSkoob.
  */
 void listagemLivros() {
-    vector<struct Livro> livros;
-
     if (!listaLivros(livros)) {
         if (livros.size() == 0) {
             cout << "--- Nenhum livro cadastrado! ---" << endl << endl;
@@ -105,6 +209,28 @@ void listagemLivros() {
             cout << endl;
         }
     }
+}
+
+/**
+ * Localiza um livro da listagem atraves do ID.
+ *
+ * @param livros
+ * @param id
+ * @return
+ */
+struct Livro localizaLivro(vector<struct Livro> livros, int id) {
+    struct Livro livro;
+
+    for (size_t indice = 0; indice < livros.size(); indice++) {
+        livro = livros.at(indice);
+
+        if (livro.id == id)
+            return livro;
+    }
+
+    livro.id = 0;
+
+    return livro;
 }
 
 /**
