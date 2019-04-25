@@ -177,7 +177,7 @@ void exibeMenuMinhaEstante() {
                 edicaoLivro();
                 break;
             case 3:
-                remocaoLivro();
+                remocaoLivroEstante(usuario);
                 break;
             case 4:
                 adicionaLivro(usuario);

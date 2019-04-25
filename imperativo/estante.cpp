@@ -11,6 +11,7 @@ void listagemEstantes(struct Usuario &usuario);
 int mudaSituacao(struct Usuario &usuario);
 vector<Livro> obtemLivrosEstante(vector<struct Estante> estantes);
 string obtemSituacao(int status);
+int remocaoLivroEstante(struct Usuario &usuario);
 
 /**
  * Lista todos os livros disponiveis na estante.
@@ -89,4 +90,36 @@ string obtemSituacao(int status) {
     }
 
     return situacao;
+}
+
+/**
+ * Remove um livro da estante do usuario.
+ *
+ * @param usuario
+ * @return 0 (sucesso) e 1 (erro)
+ */
+int remocaoLivroEstante(struct Usuario &usuario) {
+    int retorno;
+    struct Livro livro;
+    livro.id = 0;
+
+    cout << " .::. PrompSkoob .::." << endl;
+    cout << " - Remover Livro da Estante - " << endl << endl;
+    escolheLivro(obtemLivrosEstante(usuario.estantes), livro);
+
+    char confirmacao;
+    cout << "Deseja realmente remover este livro da sua estante? (S/N) : ";
+    cin >> confirmacao;
+    cout << endl;
+
+    if (confirmacao == 's' || confirmacao == 'S') {
+        retorno = removeLivroEstante(usuario.id, livro.id);
+
+        if (!retorno)
+            exibeMensagem("Livro removido da estante com sucesso.");
+
+        return retorno;
+    }
+
+    return retorno;
 }

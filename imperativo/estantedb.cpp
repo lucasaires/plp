@@ -10,6 +10,7 @@ using namespace std;
 int adicionaLivroEstante(int idUsuario, int idLivro);
 void criaTabelaEstante();
 int mudarSituacao(int idUsuario, int idLivro, int situacao);
+int removeLivroEstante(int idUsuario, int idLivro);
 
 void criaTabelaEstante() {
     sqlite3 *bancoDados;
@@ -164,6 +165,44 @@ int mudarSituacao(int idUsuario, int idLivro, int situacao) {
 
     string sql = "UPDATE estante SET situacao = " + to_string(situacao) + " WHERE id_livro = " + to_string(idLivro) +
                  " AND id_usuario = " + to_string(idUsuario) + ";";
+
+    retorno = sqlite3_exec(bancoDados, sql.c_str(), NULL, 0, &erroBanco);
+
+    if (retorno != SQLITE_OK) {
+        exibeMensagemErroBancoDados(mensagemErro, sqlite3_errmsg(bancoDados));
+        sqlite3_free(erroBanco);
+        sqlite3_close(bancoDados);
+
+        return 1;
+    }
+
+    sqlite3_close(bancoDados);
+
+    return 0;
+}
+
+/**
+ * Remove o livro da estante do usuario.
+ *
+ * @param idUsuario
+ * @param idLivro
+ * @return 0 (sucesso) e 1 (erro)
+ */
+int removeLivroEstante(int idUsuario, int idLivro) {
+    sqlite3 *bancoDados;
+    char *erroBanco;
+    int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
+    string mensagemErro = "Ocorreu um erro ao remover livro da minha estante: ";
+
+    if (retorno != SQLITE_OK) {
+        exibeMensagemErroBancoDados("Não foi possível abrir o banco de dados: ", sqlite3_errmsg(bancoDados));
+        sqlite3_close(bancoDados);
+
+        return 1;
+    }
+
+    string sql = "DELETE FROM estante WHERE id_usuario = " + to_string(idUsuario) + " AND id_livro = "
+            + to_string(idLivro) + ";";
 
     retorno = sqlite3_exec(bancoDados, sql.c_str(), NULL, 0, &erroBanco);
 
