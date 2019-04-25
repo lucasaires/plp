@@ -20,7 +20,11 @@ const int MV_SAIR = 4;
  * Indices do array tipo usuario.
  */
 const int U_ID = 0;
-const int U_NOME = 1;
-const int U_EMAIL = 2;
-const int U_SENHA = 3;
-const int U_INTERESSES = 4;
+
+/**
+ * Situacoes da estante.
+ */
+const int NAO_LIDO = 1;
+const int LENDO = 2;
+const int LIDO = 3;
+const int ABANDONEI = 4;

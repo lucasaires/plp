@@ -16,6 +16,7 @@
 #import "constantes.cpp"
 #import "usuario.cpp"
 #import "livro.cpp"
+#import "estante.cpp"
 #import "utilitario.cpp"
 
 using namespace std;
@@ -25,6 +26,7 @@ struct Usuario usuario;
 
 void exibeAutenticacaoUsuario();
 void exibeMenu();
+void exibeMenuLivro();
 void exibeMenuUsuario();
 void exibeMenuVisitante();
 void exibeRemoveUsuario();
@@ -98,6 +100,46 @@ void exibeMenuUsuario() {
             case M_SAIR:
                 exibeMensagem("Ate breve... :)");
                 exit(EXIT_SUCCESS);
+            default:
+                exibeMensagemErro("Opcao invalida!");
+        }
+    }
+}
+
+/**
+ * Exibe a listagem de livros juntamente com o submenu.
+ * 1 - Cadastrar livros
+ * 2 - Editar livro
+ * 3 - Remover livro
+ * 4 - Voltar para o menu principal
+ */
+void exibeMenuLivro() {
+    int opcao;
+
+    while (opcao != 5) {
+        cout << " .::. PrompSkoob .::." << endl;
+        cout << " - Gerenciar Livro - " << endl << endl;
+        listagemEstantes();
+        cout << " (1) Cadastrar | (2) Editar | (3) Remover | (4) Adicionar a Estante | (5) Voltar" << endl << endl;
+        cout << "Opcao: ";
+        cin >> opcao;
+        cout << endl;
+
+        switch (opcao) {
+            case 1:
+                cadastroLivro();
+                break;
+            case 2:
+                edicaoLivro();
+                break;
+            case 3:
+                remocaoLivro();
+                break;
+            case 4:
+                adicionaLivro(usuario);
+                break;
+            case 5:
+                exibeMenu();
             default:
                 exibeMensagemErro("Opcao invalida!");
         }

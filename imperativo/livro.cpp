@@ -4,18 +4,48 @@
 #include "utilitario.cpp"
 #include "livro.struct.cpp"
 #include "livrodb.cpp"
+#include "estantedb.cpp"
 
 using namespace std;
 
 vector<struct Livro> livros;
 
+int adicionaLivro(struct Usuario usuario);
 int cadastroLivro();
 int edicaoLivro();
-void exibeMenuLivro();
-void listagemLivros();
-struct Livro localizaLivro(vector<struct Livro> livros, int id);
+void escolheLivro(struct Livro &livro);
+void listagemEstantes();
+struct Livro localizaLivroPorID(vector<struct Livro> livros, int id);
 string obtemGenerosExistentes(struct Livro &livro);
 int remocaoLivro();
+
+/**
+ * Adiciona o livro na estante do usuario logado.
+ *
+ * @param usuario
+ * @return
+ */
+int adicionaLivro(struct Usuario usuario) {
+    int retorno = 0;
+    char adicao = 'S';
+    struct Livro livro;
+
+    while (adicao != 'N' && adicao != 'n') {
+        cout << " .::. PrompSkoob .::." << endl;
+        cout << " - Adicionar Livro na Estante  - " << endl << endl;
+        livro.id = 0;
+        escolheLivro(livro);
+        retorno = adicionaLivroEstante(usuario.id, livro.id);
+
+        if (!retorno)
+            exibeMensagem("Livro adicionado a sua estante com sucesso.");
+
+        cout << "Deseja adicionar outro livro a sua estante? (S/N): ";
+        cin >> adicao;
+    }
+
+    return retorno;
+}
 
 /**
  * Exibe o cadastro de livro.
@@ -67,7 +97,7 @@ int cadastroLivro() {
  * @return 0 (sucesso) e 1 (erro)
  */
 int edicaoLivro() {
-    int retorno, campo, idLivro;
+    int retorno, campo;
     char genero;
     char edicao = 'S';
     struct Livro livro;
@@ -75,16 +105,7 @@ int edicaoLivro() {
 
     cout << " .::. PrompSkoob .::." << endl;
     cout << " - Editar Livro - " << endl << endl;
-
-    while (livro.id == 0) {
-        cout << "Qual livro deseja editar? Informe o ID: ";
-        cin >> idLivro;
-        cout << endl;
-        livro = localizaLivro(livros, idLivro);
-
-        if (livro.id == 0)
-            exibeMensagemErro("O ID informado invalido!");
-    }
+    escolheLivro(livro);
 
     cout << "Qual campo deseja modificar?" << endl;
     cout << "(1) Nome: " << livro.nome << endl;
@@ -160,48 +181,12 @@ int edicaoLivro() {
 }
 
 /**
- * Exibe a listagem de livros juntamente com o submenu.
- * 1 - Cadastrar livros
- * 2 - Editar livro
- * 3 - Remover livro
- * 4 - Voltar para o menu principal
- */
-void exibeMenuLivro() {
-    int opcao;
-
-    while (opcao != 4) {
-        cout << " .::. PrompSkoob .::." << endl;
-        cout << " - Gerenciar Livro - " << endl << endl;
-        listagemLivros();
-        cout << " (1) Cadastrar | (2) Editar | (3) Remover | (4) Voltar" << endl << endl;
-        cout << "Opcao: ";
-        cin >> opcao;
-        cout << endl;
-
-        switch (opcao) {
-            case 1:
-                cadastroLivro();
-                break;
-            case 2:
-                edicaoLivro();
-                break;
-            case 3:
-                remocaoLivro();
-                break;
-            default:
-                if (opcao != 4)
-                    exibeMensagemErro("Opcao invalida!");
-        }
-    }
-}
-
-/**
  * Lista todos os livros cadastrados no PrompSkoob.
  */
-void listagemLivros() {
+void listagemEstantes() {
     if (!listaLivros(livros)) {
         if (livros.size() == 0) {
-            cout << "--- Nenhum livro cadastrado! ---" << endl << endl;
+            cout << "--- Nenhum livro encontrado! ---" << endl << endl;
         } else {
             string linha;
 
@@ -222,7 +207,7 @@ void listagemLivros() {
  * @param id
  * @return
  */
-struct Livro localizaLivro(vector<struct Livro> livros, int id) {
+struct Livro localizaLivroPorID(vector<struct Livro> livros, int id) {
     struct Livro livro;
 
     for (size_t indice = 0; indice < livros.size(); indice++) {
@@ -261,22 +246,13 @@ string obtemGenerosExistentes(struct Livro &livro) {
  * @return 0 (sucesso) e 1 (erro)
  */
 int remocaoLivro() {
-    int retorno, idLivro;
+    int retorno;
     struct Livro livro;
     livro.id = 0;
 
     cout << " .::. PrompSkoob .::." << endl;
     cout << " - Remover Livro - " << endl << endl;
-
-    while (livro.id == 0) {
-        cout << "Qual livro deseja remover? Informe o ID: ";
-        cin >> idLivro;
-        cout << endl;
-        livro = localizaLivro(livros, idLivro);
-
-        if (livro.id == 0)
-            exibeMensagemErro("O ID informado invalido!");
-    }
+    escolheLivro(livro);
 
     char confirmacao;
     cout << "Deseja realmente remover este livro? (S/N) : ";
@@ -286,11 +262,29 @@ int remocaoLivro() {
     if (confirmacao == 's' || confirmacao == 'S') {
         retorno = removeLivro(livro.id);
 
-        if(!retorno)
+        if (!retorno)
             exibeMensagem("Livro removido com sucesso.");
 
         return retorno;
     }
 
     return retorno;
+}
+
+/**
+ * Escolhe o livro de acordo com ID do livro.
+ * @param livro
+ */
+void escolheLivro(struct Livro &livro) {
+    int idLivro;
+
+    while (livro.id == 0) {
+        cout << "Informe o ID do livro: ";
+        cin >> idLivro;
+        cout << endl;
+        livro = localizaLivroPorID(livros, idLivro);
+
+        if (livro.id == 0)
+            exibeMensagemErro("O ID informado invalido!");
+    }
 }
