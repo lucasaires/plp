@@ -201,7 +201,6 @@ int geraIDUsuario() {
         id = sqlite3_column_int(stmt, 0);
         id += 1;
     }
-
     sqlite3_finalize(stmt);
     sqlite3_close(bancoDados);
 

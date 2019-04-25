@@ -14,7 +14,7 @@ int adicionaLivro(struct Usuario usuario);
 int cadastroLivro();
 int edicaoLivro();
 void escolheLivro(struct Livro &livro);
-void listagemEstantes();
+void listagemLivros();
 struct Livro localizaLivroPorID(vector<struct Livro> livros, int id);
 string obtemGenerosExistentes(struct Livro &livro);
 int remocaoLivro();
@@ -183,7 +183,7 @@ int edicaoLivro() {
 /**
  * Lista todos os livros cadastrados no PrompSkoob.
  */
-void listagemEstantes() {
+void listagemLivros() {
     if (!listaLivros(livros)) {
         if (livros.size() == 0) {
             cout << "--- Nenhum livro encontrado! ---" << endl << endl;

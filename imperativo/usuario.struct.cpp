@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <string>
 
 using namespace std;
@@ -13,4 +14,5 @@ struct Usuario {
     int romance;
     int horror;
     int biografia;
+    vector<struct Estante> estantes;
 };

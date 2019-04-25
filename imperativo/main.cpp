@@ -27,6 +27,7 @@ struct Usuario usuario;
 void exibeAutenticacaoUsuario();
 void exibeMenu();
 void exibeMenuLivro();
+void exibeMenuMinhaEstante();
 void exibeMenuUsuario();
 void exibeMenuVisitante();
 void exibeRemoveUsuario();
@@ -89,6 +90,9 @@ void exibeMenuUsuario() {
             case M_CADASTRAR_LIVRO:
                 exibeMenuLivro();
                 break;
+            case M_MINHA_ESTANTE:
+                exibeMenuMinhaEstante();
+                break;
             case M_REMOVER_PERFIL:
                 exibeRemoveUsuario();
                 break;
@@ -119,8 +123,48 @@ void exibeMenuLivro() {
     while (opcao != 5) {
         cout << " .::. PrompSkoob .::." << endl;
         cout << " - Gerenciar Livro - " << endl << endl;
-        listagemEstantes();
+        listagemLivros();
         cout << " (1) Cadastrar | (2) Editar | (3) Remover | (4) Adicionar a Estante | (5) Voltar" << endl << endl;
+        cout << "Opcao: ";
+        cin >> opcao;
+        cout << endl;
+
+        switch (opcao) {
+            case 1:
+                cadastroLivro();
+                break;
+            case 2:
+                edicaoLivro();
+                break;
+            case 3:
+                remocaoLivro();
+                break;
+            case 4:
+                adicionaLivro(usuario);
+                break;
+            case 5:
+                exibeMenu();
+            default:
+                exibeMensagemErro("Opcao invalida!");
+        }
+    }
+}
+
+/**
+ * Exibe a listagem de livros juntamente com o submenu.
+ * 1 - Cadastrar livros
+ * 2 - Editar livro
+ * 3 - Remover livro
+ * 4 - Voltar para o menu principal
+ */
+void exibeMenuMinhaEstante() {
+    int opcao;
+
+    while (opcao != 5) {
+        cout << " .::. PrompSkoob .::." << endl;
+        cout << " - Minha Estante - " << endl << endl;
+        listagemEstantes(usuario);
+        cout << " (1) Mudar Status | (2) Avaliar | (3) Remover | (4) Registrar Leitura |  (5) Voltar" << endl << endl;
         cout << "Opcao: ";
         cin >> opcao;
         cout << endl;

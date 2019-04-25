@@ -2,6 +2,7 @@
 #include <sqlite3.h>
 #include <vector>
 #include "constantes.cpp"
+#include "estante.struct.cpp"
 #include "utilitario.cpp"
 
 using namespace std;
@@ -72,6 +73,68 @@ int adicionaLivroEstante(int idUsuario, int idLivro) {
         return 1;
     }
 
+    sqlite3_close(bancoDados);
+
+    return 0;
+}
+
+/**
+ * Lista todos os livros da estante do usuario.
+ *
+ * @param livros
+ * @return 0 (sucesso) e 1 (erro)
+ */
+int listaLivrosEstante(struct Usuario &usuario) {
+    sqlite3 *bancoDados;
+    sqlite3_stmt *stmt;
+    int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
+    string mensagemErro = "Ocorreu um erro ao listar livros da estante: ";
+    usuario.estantes.clear();
+
+    if (retorno != SQLITE_OK) {
+        cerr << "Não foi possível abrir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
+        sqlite3_finalize(stmt);
+        sqlite3_close(bancoDados);
+
+        return 1;
+    }
+
+    string sql = "SELECT id_livro, nome, autor, paginas, nota, situacao FROM estante INNER JOIN livro ON "
+                 "livro.id = id_livro WHERE id_usuario = " + to_string(usuario.id) + " ;";
+    retorno = sqlite3_prepare(bancoDados, sql.c_str(), -1, &stmt, NULL);
+
+    if (retorno != SQLITE_OK) {
+        cerr << mensagemErro << sqlite3_errmsg(bancoDados) << endl;
+        sqlite3_finalize(stmt);
+        sqlite3_close(bancoDados);
+
+        return 1;
+    }
+
+    while (true) {
+        retorno = sqlite3_step(stmt);
+
+        if (retorno == SQLITE_DONE) break;
+
+        if (retorno != SQLITE_ROW) {
+            cerr << mensagemErro << sqlite3_errmsg(bancoDados) << endl;
+            sqlite3_finalize(stmt);
+            sqlite3_close(bancoDados);
+
+            return 1;
+        }
+
+        struct Estante estante;
+        estante.livro.id = sqlite3_column_int(stmt, 0);
+        estante.livro.nome = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1));
+        estante.livro.autor = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 2));
+        estante.livro.paginas = sqlite3_column_int(stmt, 3);
+        estante.nota = sqlite3_column_int(stmt, 4);
+        estante.situacao = sqlite3_column_int(stmt, 5);
+        usuario.estantes.push_back(estante);
+    }
+
+    sqlite3_finalize(stmt);
     sqlite3_close(bancoDados);
 
     return 0;
