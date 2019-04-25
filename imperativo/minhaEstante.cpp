@@ -212,6 +212,7 @@ int editaRegistroLeitura(struct Usuario &usuario){
     cout << "Qual campo deseja modificar?" << endl;
     cout << "(1) Numero de Páginas Lida " <<  endl;
     cout << "(2) Comentario " << endl;
+    cout << "(3) Numero de Paginas e Comentario" << endl;
     
     bool condicao = false; 
     while(!condicao){
@@ -228,6 +229,14 @@ int editaRegistroLeitura(struct Usuario &usuario){
         getline(cin, novoComentario);
         condicao = true;
         editaComentarios(idUsiario, idLivro, novoComentario);
+        }
+        else if(opcao == 3){
+        cout << "Qual novo número de páginas? " << endl;
+        cin >> novoNumPaginas;
+        cout << "Digite um novo comentario: " << endl;
+        getline(cin, novoComentario);
+        condicao = true;
+        editaRegistro(idUsuario, idLivro, novoNumeroPaginas, novoComentario);
         }
         else{
             cout << "Opção invalida, digite novamente: " << endl;
