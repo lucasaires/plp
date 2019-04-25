@@ -16,3 +16,5 @@ O **PrompSkoob** é um mini programa para organização de leituras e livros. O 
 usufruir de recursos como recomendações de livros, registro de leitura, gerenciar o acervo geral de livros e muito mais.
 Mas, caso prefira, poderá acessá-lo como visitante, podendo consultar os livros do acervo, visualizar a nota de avaliação
 dada por usuários do **PrompSkoob**.
+
+[Documentação completa.]()
