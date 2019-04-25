@@ -15,6 +15,7 @@ void exibeMenuLivro();
 void listagemLivros();
 struct Livro localizaLivro(vector<struct Livro> livros, int id);
 string obtemGenerosExistentes(struct Livro &livro);
+int remocaoLivro();
 
 /**
  * Exibe o cadastro de livro.
@@ -184,6 +185,9 @@ void exibeMenuLivro() {
             case 2:
                 edicaoLivro();
                 break;
+            case 3:
+                remocaoLivro();
+                break;
             default:
                 if (opcao != 4)
                     exibeMensagemErro("Opcao invalida!");
@@ -249,4 +253,44 @@ string obtemGenerosExistentes(struct Livro &livro) {
     generos = (generos.size() > 0) ? ("(" + generos.substr(0, generos.size() - 2) + ")") : "";
 
     return generos;
+}
+
+/**
+ * Remove um livro.
+ *
+ * @return 0 (sucesso) e 1 (erro)
+ */
+int remocaoLivro() {
+    int retorno, idLivro;
+    struct Livro livro;
+    livro.id = 0;
+
+    cout << " .::. PrompSkoob .::." << endl;
+    cout << " - Remover Livro - " << endl << endl;
+
+    while (livro.id == 0) {
+        cout << "Qual livro deseja remover? Informe o ID: ";
+        cin >> idLivro;
+        cout << endl;
+        livro = localizaLivro(livros, idLivro);
+
+        if (livro.id == 0)
+            exibeMensagemErro("O ID informado invalido!");
+    }
+
+    char confirmacao;
+    cout << "Deseja realmente remover este livro? (S/N) : ";
+    cin >> confirmacao;
+    cout << endl;
+
+    if (confirmacao == 's' || confirmacao == 'S') {
+        retorno = removeLivro(livro.id);
+
+        if(!retorno)
+            exibeMensagem("Livro removido com sucesso.");
+
+        return retorno;
+    }
+
+    return retorno;
 }

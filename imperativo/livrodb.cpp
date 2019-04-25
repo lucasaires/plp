@@ -10,6 +10,7 @@ void criaTabelaLivro();
 int editaLivro(struct Livro &livro);
 int insereLivro(struct Livro &livro);
 int geraIDLivro();
+int removeLivro(int id);
 
 void criaTabelaLivro() {
     sqlite3 *bancoDados;
@@ -237,6 +238,43 @@ int listaLivros(vector<struct Livro> &livros) {
     }
 
     sqlite3_finalize(stmt);
+    sqlite3_close(bancoDados);
+
+    return 0;
+}
+
+/**
+ * Remove o livro pelo id.
+ *
+ * @param id
+ * @return 0 (sucesso) e 1 (erro)
+ */
+int removeLivro(int id) {
+    sqlite3 *bancoDados;
+    char *erroBanco;
+    int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
+    string mensagemErro = "Ocorreu um erro ao remover livro: ";
+
+    if (retorno != SQLITE_OK) {
+        exibeMensagemErroBancoDados("Não foi possível abrir o banco de dados: ", sqlite3_errmsg(bancoDados));
+        sqlite3_close(bancoDados);
+
+        return 1;
+    }
+
+    string sql = "DELETE FROM livro "
+                 "WHERE id = " + to_string(id) + ";";
+
+    retorno = sqlite3_exec(bancoDados, sql.c_str(), NULL, 0, &erroBanco);
+
+    if (retorno != SQLITE_OK) {
+        exibeMensagemErroBancoDados(mensagemErro, sqlite3_errmsg(bancoDados));
+        sqlite3_free(erroBanco);
+        sqlite3_close(bancoDados);
+
+        return 1;
+    }
+
     sqlite3_close(bancoDados);
 
     return 0;
