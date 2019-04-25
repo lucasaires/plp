@@ -23,15 +23,29 @@ using namespace std;
 int estaLogado = 0;
 struct Usuario usuario;
 
+void exibeAutenticacaoUsuario();
 void exibeMenu();
 void exibeMenuUsuario();
 void exibeMenuVisitante();
-void exibeAutenticacaoUsuario();
 void exibeRemoveUsuario();
 
 int main() {
     exibeMenu();
     return 0;
+}
+
+/**
+ * Exibe autenticacao de usuario.
+ */
+void exibeAutenticacaoUsuario() {
+    usuario = autenticacaoUsuario();
+
+    if (usuario.id > 0) {
+        estaLogado = 1;
+    } else {
+        estaLogado = 0;
+    }
+    exibeMenu();
 }
 
 /**
@@ -56,7 +70,7 @@ void exibeMenuUsuario() {
         cout << " - Menu Principal - " << endl;
         cout << " Ola, " << usuario.nome << "!" << endl << endl;
         cout << " (1) Editar meu perfil" << endl;
-        cout << " (2) Cadastrar livro" << endl;
+        cout << " (2) Gerenciar livro" << endl;
         cout << " (3) Minha estante" << endl;
         cout << " (4) Pesquisar no acervo" << endl;
         cout << " (5) Recomendações de livros" << endl;
@@ -68,10 +82,10 @@ void exibeMenuUsuario() {
 
         switch (opcao) {
             case M_EDITAR_PERFIL:
-                if (edicaoPerfilUsuario(usuario)) exibeMenu();
+                edicaoPerfilUsuario(usuario);
                 break;
             case M_CADASTRAR_LIVRO:
-                if (cadastroLivro()) exibeMenu();
+                exibeMenuLivro();
                 break;
             case M_REMOVER_PERFIL:
                 exibeRemoveUsuario();
@@ -109,7 +123,7 @@ void exibeMenuVisitante() {
 
         switch (opcao) {
             case MV_CADASTRO_USUARIO:
-                if (cadastroUsuario()) exibeMenu();
+                cadastroUsuario();
                 break;
             case MV_AUTENTICACAO:
                 exibeAutenticacaoUsuario();
@@ -124,20 +138,6 @@ void exibeMenuVisitante() {
 }
 
 /**
- * Exibe autenticacao de usuario.
- */
-void exibeAutenticacaoUsuario() {
-    usuario = autenticacaoUsuario();
-
-    if (usuario.id > 0) {
-        estaLogado = 1;
-        exibeMenu();
-    } else {
-        estaLogado = 0;
-    }
-}
-
-/**
  * Exibe remoçao de usuario.
  */
 void exibeRemoveUsuario() {
@@ -146,13 +146,10 @@ void exibeRemoveUsuario() {
     cin >> confirmacao;
 
     if (confirmacao == 's' || confirmacao == 'S') {
-        if (remocaoUsuario(usuario.id)) {
-            exibeMenu();
-        } else {
+        if (!remocaoUsuario(usuario.id)) {
             estaLogado = 0;
             usuario.id = 0;
         }
     }
-
     exibeMenu();
 }
