@@ -8,38 +8,10 @@ using namespace std;
 
 int autenticaUsuario(struct Usuario &usuario);
 void criaTabelaUsuario();
+int editaUsuario(struct Usuario &usuario);
+int insereUsuario(struct Usuario &usuario);
 int obtemID();
-
-void criaTabelaUsuario() {
-    sqlite3 *bancoDados;
-    char *erroBanco;
-    int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
-    string mensagemErro = "Ocorreu um erro ao criar a tabela de usuario: ";
-
-    if (retorno) {
-        cerr << "Não foi possível abrir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
-    }
-
-    string sql = "CREATE TABLE IF NOT EXISTS usuario("
-                 "id INT PRIMARY KEY NOT NULL, "
-                 "nome TEXT NOT NULL, "
-                 "email TEXT NOT NULL UNIQUE, "
-                 "senha INT NOT NULL, "
-                 "ficcao INT, "
-                 "nao_ficcao INT, "
-                 "romance INT, "
-                 "horror INT, "
-                 "biografia INT);";
-
-    retorno = sqlite3_exec(bancoDados, sql.c_str(), NULL, 0, &erroBanco);
-
-    if (retorno != SQLITE_OK) {
-        cerr << mensagemErro << sqlite3_errmsg(bancoDados) << endl;
-        sqlite3_free(erroBanco);
-    }
-
-    sqlite3_close(bancoDados);
-}
+int removeUsuario(int id);
 
 /**
  * Autentica o usuario atraves do email e senha.
@@ -107,13 +79,44 @@ int autenticaUsuario(struct Usuario &usuario) {
     return 0;
 }
 
+void criaTabelaUsuario() {
+    sqlite3 *bancoDados;
+    char *erroBanco;
+    int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
+    string mensagemErro = "Ocorreu um erro ao criar a tabela de usuario: ";
+
+    if (retorno) {
+        cerr << "Não foi possível abrir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
+    }
+
+    string sql = "CREATE TABLE IF NOT EXISTS usuario("
+                 "id INT PRIMARY KEY NOT NULL, "
+                 "nome TEXT NOT NULL, "
+                 "email TEXT NOT NULL UNIQUE, "
+                 "senha INT NOT NULL, "
+                 "ficcao INT, "
+                 "nao_ficcao INT, "
+                 "romance INT, "
+                 "horror INT, "
+                 "biografia INT);";
+
+    retorno = sqlite3_exec(bancoDados, sql.c_str(), NULL, 0, &erroBanco);
+
+    if (retorno != SQLITE_OK) {
+        cerr << mensagemErro << sqlite3_errmsg(bancoDados) << endl;
+        sqlite3_free(erroBanco);
+    }
+
+    sqlite3_close(bancoDados);
+}
+
 /**
  * Edita as informacoes de usuario.
  *
  * @param usuario
  * @return 0 (sucesso) e 1 (erro)
  */
-int editaUsuario(struct Usuario usuario) {
+int editaUsuario(struct Usuario &usuario) {
     sqlite3 *bancoDados;
     char *erroBanco;
     int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
@@ -213,6 +216,49 @@ int consultaUsuario(vector<string> &usuario, int id) {
 }
 
 /**
+ * Insere as informacoes de usuario.
+ *
+ * @param usuario
+ * @return 0 (sucesso) e 1 (erro)
+ */
+int insereUsuario(struct Usuario &usuario) {
+    criaTabelaUsuario();
+    usuario.id = obtemID();
+
+    sqlite3 *bancoDados;
+    char *erroBanco;
+    int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
+    string mensagemErro = "Ocorreu um erro ao inserir usuário: ";
+
+    if (retorno != SQLITE_OK) {
+        exibeMensagemErroBancoDados("Não foi possível abrir o banco de dados: ", sqlite3_errmsg(bancoDados));
+        sqlite3_close(bancoDados);
+
+        return 1;
+    }
+
+    string sql = "INSERT INTO usuario(id, nome, email, senha, ficcao, nao_ficcao, romance, horror, biografia) "
+                 "VALUES('" + to_string(usuario.id) + "', '" + usuario.nome + "', '" + usuario.email + "', '" +
+                 usuario.senha + "', '" + to_string(usuario.ficcao) + "', '" + to_string(usuario.naoFiccao) + "', '" +
+                 to_string(usuario.romance) + "', '" + to_string(usuario.horror) + "', '" +
+                 to_string(usuario.biografia) + "');";
+
+    retorno = sqlite3_exec(bancoDados, sql.c_str(), NULL, 0, &erroBanco);
+
+    if (retorno != SQLITE_OK) {
+        exibeMensagemErroBancoDados(mensagemErro, sqlite3_errmsg(bancoDados));
+        sqlite3_free(erroBanco);
+        sqlite3_close(bancoDados);
+
+        return 1;
+    }
+
+    sqlite3_close(bancoDados);
+
+    return 0;
+}
+
+/**
  * Consulta um usuario.
  * @param id
  * @return ultimo id (sucesso) e -1 (erro)
@@ -265,19 +311,16 @@ int obtemID() {
 }
 
 /**
- * Insere as informacoes de usuario.
+ * Remove o usuario pelo id.
  *
- * @param usuario
+ * @param id
  * @return 0 (sucesso) e 1 (erro)
  */
-int insereUsuario(struct Usuario usuario) {
-    criaTabelaUsuario();
-    usuario.id = obtemID();
-
+int removeUsuario(int id) {
     sqlite3 *bancoDados;
     char *erroBanco;
     int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
-    string mensagemErro = "Ocorreu um erro ao inserir usuário: ";
+    string mensagemErro = "Ocorreu um erro ao remover usuário: ";
 
     if (retorno != SQLITE_OK) {
         exibeMensagemErroBancoDados("Não foi possível abrir o banco de dados: ", sqlite3_errmsg(bancoDados));
@@ -286,46 +329,13 @@ int insereUsuario(struct Usuario usuario) {
         return 1;
     }
 
-    string sql = "INSERT INTO usuario(id, nome, email, senha, ficcao, nao_ficcao, romance, horror, biografia) "
-                 "VALUES('" + to_string(usuario.id) + "', '" + usuario.nome + "', '" + usuario.email + "', '" +
-                 usuario.senha + "', '" + to_string(usuario.ficcao) + "', '" + to_string(usuario.naoFiccao) + "', '" +
-                 to_string(usuario.romance) + "', '" + to_string(usuario.horror) + "', '" +
-                 to_string(usuario.biografia) + "');";
+    string sql = "DELETE FROM usuario "
+                 "WHERE id = " + to_string(id) + ";";
 
     retorno = sqlite3_exec(bancoDados, sql.c_str(), NULL, 0, &erroBanco);
 
     if (retorno != SQLITE_OK) {
         exibeMensagemErroBancoDados(mensagemErro, sqlite3_errmsg(bancoDados));
-        sqlite3_free(erroBanco);
-        sqlite3_close(bancoDados);
-
-        return 1;
-    }
-
-    sqlite3_close(bancoDados);
-
-    return 0;
-}
-
-int removeUsuario(int id) {
-    sqlite3 *bancoDados;
-    char *erroBanco;
-    int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
-    string mensagemErro = "Ocorreu um erro ao remover usuário: ";
-
-    if (retorno != SQLITE_OK) {
-        cerr << "Não foi possível abrir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
-        sqlite3_close(bancoDados);
-
-        return 1;
-    }
-
-    string sql = "DELETE FROM usuario WHERE id = " + to_string(id) + ";";
-
-    retorno = sqlite3_exec(bancoDados, sql.c_str(), NULL, 0, &erroBanco);
-
-    if (retorno != SQLITE_OK) {
-        cerr << mensagemErro << sqlite3_errmsg(bancoDados) << endl;
         sqlite3_free(erroBanco);
         sqlite3_close(bancoDados);
 

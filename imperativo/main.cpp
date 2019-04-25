@@ -37,6 +37,7 @@ void exibeMenuVisitante();
 void exibeAutenticacaoUsuario();
 void exibeCadastroUsuario();
 void exibeEdicaoPerfilUsuario();
+void exibeRemoveUsuario();
 
 int main() {
     exibeMenu();
@@ -78,6 +79,9 @@ void exibeMenuUsuario() {
         switch (opcao) {
             case M_EDITAR_PERFIL:
                 exibeEdicaoPerfilUsuario();
+                break;
+            case M_REMOVER_PERFIL:
+                exibeRemoveUsuario();
                 break;
             case M_SAIR_CONTA:
                 estaLogado = 0;
@@ -130,7 +134,7 @@ void exibeMenuVisitante() {
  * Exibe cadastro de usuario.
  */
 void exibeCadastroUsuario() {
-    if(cadastroUsuario()) {
+    if (cadastroUsuario()) {
         exibeMenu();
     }
 }
@@ -153,6 +157,26 @@ void exibeEdicaoPerfilUsuario() {
     if (edicaoPerfilUsuario(usuario)) {
         exibeMenu();
     }
+}
+
+/**
+ * Exibe remoçao de usuario.
+ */
+void exibeRemoveUsuario() {
+    char confirmacao;
+    cout << "Deseja realmente remover seu perfil? (S/N) : ";
+    cin >> confirmacao;
+
+    if (confirmacao == 's' || confirmacao == 'S') {
+        if (remocaoUsuario(usuario.id)) {
+            exibeMenu();
+        } else {
+            estaLogado = 0;
+            usuario.id = 0;
+        }
+    }
+
+    exibeMenu();
 }
 
 //Falta implementacao
