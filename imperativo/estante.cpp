@@ -1,7 +1,5 @@
 #include <iostream>
 #include <string>
-#include "constantes.cpp"
-#include "utilitario.cpp"
 
 using namespace std;
 

@@ -1,9 +1,7 @@
 #include <iostream>
 #include <string>
-#import "constantes.cpp"
-#import "utilitario.cpp"
-#import "usuario.struct.cpp"
-#import "usuariodb.cpp"
+#include "usuario.struct.cpp"
+#include "usuariodb.cpp"
 
 using namespace std;
 

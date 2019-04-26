@@ -1,11 +1,11 @@
-const char * BANCO_DADOS = "prompskoob.sqlite";
+const char *BANCO_DADOS = "prompskoob.sqlite";
 
 /**
  *  Menu principal
  */
- const int M_EDITAR_PERFIL = 1;
- const int M_CADASTRAR_LIVRO = 2;
- const int M_MINHA_ESTANTE = 3;
+const int M_EDITAR_PERFIL = 1;
+const int M_CADASTRAR_LIVRO = 2;
+const int M_MINHA_ESTANTE = 3;
 const int M_PESQUISA = 4;
 const int M_RECOMENDACOES = 5;
 const int M_REMOVER_PERFIL = 6;

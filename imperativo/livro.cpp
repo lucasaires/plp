@@ -1,7 +1,5 @@
 #include <iostream>
 #include <string>
-#include "constantes.cpp"
-#include "utilitario.cpp"
 #include "livro.struct.cpp"
 #include "livrodb.cpp"
 #include "estantedb.cpp"
