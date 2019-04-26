@@ -28,6 +28,7 @@ void exibeAutenticacaoUsuario();
 void exibeMenu();
 void exibeMenuLivro();
 void exibeMenuMinhaEstante();
+void exibeMenuRecomendacao();
 void exibeMenuUsuario();
 void exibeMenuVisitante();
 void exibeRemoveUsuario();
@@ -96,6 +97,12 @@ void exibeMenuUsuario() {
             case M_MINHA_ESTANTE:
                 exibeMenuMinhaEstante();
                 break;
+            case M_PESQUISA:
+                pesquisaAcervo();
+                break;
+            case M_RECOMENDACOES:
+                exibeMenuRecomendacao();
+                break;
             case M_REMOVER_PERFIL:
                 exibeRemoveUsuario();
                 break;
@@ -154,11 +161,7 @@ void exibeMenuLivro() {
 }
 
 /**
- * Exibe a listagem de livros juntamente com o submenu.
- * 1 - Cadastrar livros
- * 2 - Editar livro
- * 3 - Remover livro
- * 4 - Voltar para o menu principal
+ * Exibe a listagem de livros juntamente com o submenu da estante.
  */
 void exibeMenuMinhaEstante() {
     int opcao;
@@ -167,7 +170,7 @@ void exibeMenuMinhaEstante() {
         cout << " .::. PrompSkoob .::." << endl;
         cout << " - Minha Estante - " << endl << endl;
         listagemEstantes(usuario);
-        cout << " (1) Mudar Status | (2) Avaliar | (3) Remover | (4) Registrar Leitura |  (5) Voltar" << endl << endl;
+        cout << " (1) Mudar Status | (2) Avaliar | (3) Remover | (4) Registro de Leitura |  (5) Voltar" << endl << endl;
         cout << "Opcao: ";
         cin >> opcao;
         cout << endl;
@@ -217,9 +220,39 @@ void exibeMenuVisitante() {
             case MV_AUTENTICACAO:
                 exibeAutenticacaoUsuario();
                 break;
+            case MV_PESQUISA:
+                pesquisaAcervo();
+                break;
             case MV_SAIR:
                 exibeMensagem("Ate breve... :)");
                 exit(EXIT_SUCCESS);
+            default:
+                exibeMensagemErro("Opcao invalida!");
+        }
+    }
+}
+
+/**
+ * Exibe o menu de recomendacoes de livros de acordo com os interesses do usuario.
+ */
+void exibeMenuRecomendacao() {
+    int opcao;
+
+    while (opcao != 2) {
+        cout << " .::. PrompSkoob .::." << endl;
+        cout << " - Recomendacoes de Livros - " << endl << endl;
+        listagemRecomendacoes(usuario);
+        cout << " (1) Adicionar a Estante | (2) Voltar" << endl << endl;
+        cout << "Opcao: ";
+        cin >> opcao;
+        cout << endl;
+
+        switch (opcao) {
+            case 1:
+                adicionaLivro(usuario);
+                break;
+            case 2:
+                exibeMenu();
             default:
                 exibeMensagemErro("Opcao invalida!");
         }

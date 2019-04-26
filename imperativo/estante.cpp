@@ -121,7 +121,7 @@ int edicaoSituacao(struct Usuario &usuario) {
     cout << " - Mudar Status de Leitura  - " << endl << endl;
     livro.id = 0;
     escolheLivro(obtemLivrosEstante(usuario.estantes), livro);
-    cout << "Digite o status de leitura do livro (Nao Lido[1], Lendo[2], Lido[3], Abandonei[4]) : ";
+    cout << "Digite o status de leitura do livro (Nao Lido[1], Lendo[2], Lido[3], Abandonei[4]): ";
     cin >> situacao;
     retorno = mudaSituacao(usuario.id, livro.id, situacao);
 

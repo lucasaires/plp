@@ -15,8 +15,11 @@ int cadastroLivro();
 int edicaoLivro();
 void escolheLivro(vector<struct Livro> livros, struct Livro &livro);
 void listagemLivros();
+void listagemLivrosPorTitulo(string titulo);
+void listagemRecomendacoes(struct Usuario &usuario);
 struct Livro localizaLivroPorID(vector<struct Livro> livros, int id);
 string obtemGenerosExistentes(struct Livro &livro);
+void pesquisaAcervo();
 int remocaoLivro();
 
 /**
@@ -201,6 +204,50 @@ void listagemLivros() {
 }
 
 /**
+ * Lista todos os livros cadastrados no PrompSkoob.
+ */
+void listagemLivrosPorTitulo(string titulo) {
+    if (!pesquisaLivros(livros, titulo)) {
+        if (livros.size() == 0) {
+            exibeMensagem("Nenhum livro encontrado!");
+        } else {
+            string linha;
+
+            for (size_t indice = 0; indice < livros.size(); indice++) {
+                struct Livro livro = livros.at(indice);
+                cout << "#" << livro.id << " - " << livro.nome << " - " << livro.autor << " (" << livro.paginas
+                     << "pgs) " << obtemGenerosExistentes(livro) << " - Nota Geral: " << livro.notaGeral << " - Leitores: "
+                     << livro.leitores << endl;
+            }
+            cout << endl;
+        }
+    }
+}
+
+/**
+ * Lista os livros recomendados de acordo com perfil do usuario.
+ *
+ * @param usuario
+ */
+void listagemRecomendacoes(struct Usuario &usuario) {
+    if (!recomendaLivros(livros, usuario)) {
+        if (livros.size() == 0) {
+            exibeMensagem("Nenhum livro encontrado compativel com seu perfil!");
+        } else {
+            string linha;
+
+            for (size_t indice = 0; indice < livros.size(); indice++) {
+                struct Livro livro = livros.at(indice);
+                cout << "#" << livro.id << " - " << livro.nome << " - " << livro.autor << " (" << livro.paginas
+                     << "pgs) " << obtemGenerosExistentes(livro) << " - Nota Geral: " << livro.notaGeral << " - Leitores: "
+                     << livro.leitores << endl;
+            }
+            cout << endl;
+        }
+    }
+}
+
+/**
  * Localiza um livro da listagem atraves do ID.
  *
  * @param livros
@@ -238,6 +285,18 @@ string obtemGenerosExistentes(struct Livro &livro) {
     generos = (generos.size() > 0) ? ("(" + generos.substr(0, generos.size() - 2) + ")") : "";
 
     return generos;
+}
+
+/**
+ * Pesquisa de livros pelo nome.
+ */
+void pesquisaAcervo() {
+    string busca;
+    cout << " .::. PrompSkoob .::." << endl;
+    cout << " - Pesquisar Acervo - " << endl << endl;
+    cout << "Pesquise pelo titulo: ";
+    getline(cin >> ws, busca);
+    listagemLivrosPorTitulo(busca);
 }
 
 /**
