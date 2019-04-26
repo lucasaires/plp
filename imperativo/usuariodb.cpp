@@ -20,8 +20,6 @@ int removeUsuario(int id);
  * @return 0 (sucesso) e 1 (erro)
  */
 int autenticaUsuario(struct Usuario &usuario) {
-    criaTabelaUsuario();
-
     sqlite3 *bancoDados;
     sqlite3_stmt *stmt;
     int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
@@ -214,7 +212,6 @@ int geraIDUsuario() {
  * @return 0 (sucesso) e 1 (erro)
  */
 int insereUsuario(struct Usuario &usuario) {
-    criaTabelaUsuario();
     usuario.id = geraIDUsuario();
 
     sqlite3 *bancoDados;

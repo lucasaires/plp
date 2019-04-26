@@ -9,4 +9,6 @@ struct Estante {
     struct Livro livro;
     float nota;
     int situacao;
+    int paginasLidas;
+    string comentario;
 };

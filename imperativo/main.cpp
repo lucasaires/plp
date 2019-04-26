@@ -33,6 +33,9 @@ void exibeMenuVisitante();
 void exibeRemoveUsuario();
 
 int main() {
+    criaTabelaEstante();
+    criaTabelaUsuario();
+    criaTabelaLivro();
     exibeMenu();
     return 0;
 }
@@ -180,7 +183,7 @@ void exibeMenuMinhaEstante() {
                 remocaoLivroEstante(usuario);
                 break;
             case 4:
-                adicionaLivro(usuario);
+                registroLeitura(usuario);
                 break;
             case 5:
                 exibeMenu();

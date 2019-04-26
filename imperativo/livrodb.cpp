@@ -91,7 +91,6 @@ int editaLivro(struct Livro &livro) {
  * @return 0 (sucesso) e 1 (erro)
  */
 int insereLivro(struct Livro &livro) {
-    criaTabelaLivro();
     livro.id = geraIDLivro();
 
     sqlite3 *bancoDados;
@@ -186,8 +185,6 @@ int geraIDLivro() {
  * @return 0 (sucesso) e 1 (erro)
  */
 int listaLivros(vector<struct Livro> &livros) {
-    criaTabelaLivro();
-
     sqlite3 *bancoDados;
     sqlite3_stmt *stmt;
     int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);

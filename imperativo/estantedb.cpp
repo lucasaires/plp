@@ -10,7 +10,9 @@ using namespace std;
 int adicionaLivroEstante(int idUsuario, int idLivro);
 int avaliaLivro(int idUsuario, int idLivro, int nota);
 void criaTabelaEstante();
+int listaLivrosEstante(struct Usuario &usuario);
 int mudaSituacao(int idUsuario, int idLivro, int situacao);
+int registraLeitura(struct Estante &estante);
 int removeLivroEstante(int idUsuario, int idLivro);
 
 void criaTabelaEstante() {
@@ -27,6 +29,8 @@ void criaTabelaEstante() {
                  "id_livro INT NOT NULL, "
                  "nota REAL NOT NULL, "
                  "situacao INT NOT NULL, "
+                 "paginas_lidas INT, "
+                 "comentario TEXT, "
                  "FOREIGN KEY (id_usuario) REFERENCES usuario(id) ON UPDATE CASCADE ON DELETE CASCADE, "
                  "FOREIGN KEY (id_livro) REFERENCES livro(id) ON UPDATE CASCADE ON DELETE CASCADE, "
                  "UNIQUE(id_usuario, id_livro));";
@@ -49,8 +53,6 @@ void criaTabelaEstante() {
  * @return 0 (sucesso) e 1 (erro)
  */
 int adicionaLivroEstante(int idUsuario, int idLivro) {
-    criaTabelaEstante();
-
     sqlite3 *bancoDados;
     char *erroBanco;
     int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
@@ -134,21 +136,22 @@ int listaLivrosEstante(struct Usuario &usuario) {
     usuario.estantes.clear();
 
     if (retorno != SQLITE_OK) {
-        cerr << "Não foi possível abrir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
+        exibeMensagemErroBancoDados("Não foi possível abrir o banco de dados: ", sqlite3_errmsg(bancoDados));
         sqlite3_finalize(stmt);
         sqlite3_close(bancoDados);
 
         return 1;
     }
 
-    string sql = "SELECT id_livro, nome, autor, paginas, nota, situacao, COUNT(id_livro) AS leitores, (SELECT AVG(nota) "
-                 "FROM estante WHERE livro.id = id_livro) AS nota_geral FROM estante INNER JOIN livro ON livro.id = "
-                 "id_livro WHERE id_usuario = " + to_string(usuario.id) + " ;";
+    string sql =
+            "SELECT id_livro, nome, autor, paginas, nota, situacao, paginas_lidas, comentario, COUNT(id_livro) AS "
+            "leitores, (SELECT AVG(nota) FROM estante WHERE livro.id = id_livro) AS nota_geral FROM estante INNER "
+            "JOIN livro ON livro.id = id_livro WHERE id_usuario = " + to_string(usuario.id) + " ;";
 
     retorno = sqlite3_prepare(bancoDados, sql.c_str(), -1, &stmt, NULL);
 
     if (retorno != SQLITE_OK) {
-        cerr << mensagemErro << sqlite3_errmsg(bancoDados) << endl;
+        exibeMensagemErroBancoDados(mensagemErro, sqlite3_errmsg(bancoDados));
         sqlite3_finalize(stmt);
         sqlite3_close(bancoDados);
 
@@ -161,23 +164,34 @@ int listaLivrosEstante(struct Usuario &usuario) {
         if (retorno == SQLITE_DONE) break;
 
         if (retorno != SQLITE_ROW) {
-            cerr << mensagemErro << sqlite3_errmsg(bancoDados) << endl;
+            cout << "erro sqlite" << endl;
+            exibeMensagemErroBancoDados(mensagemErro, sqlite3_errmsg(bancoDados));
             sqlite3_finalize(stmt);
             sqlite3_close(bancoDados);
 
             return 1;
         }
 
-        struct Estante estante;
-        estante.livro.id = sqlite3_column_int(stmt, 0);
-        estante.livro.nome = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1));
-        estante.livro.autor = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 2));
-        estante.livro.paginas = sqlite3_column_int(stmt, 3);
-        estante.nota = sqlite3_column_double(stmt, 4);
-        estante.situacao = sqlite3_column_int(stmt, 5);
-        estante.livro.leitores = sqlite3_column_int(stmt, 6);
-        estante.livro.notaGeral = sqlite3_column_double(stmt, 7);
-        usuario.estantes.push_back(estante);
+        if (sqlite3_column_type(stmt, 0) != SQLITE_NULL) {
+            struct Estante estante;
+            estante.livro.id = sqlite3_column_int(stmt, 0);
+            estante.idLivro = sqlite3_column_int(stmt, 0);
+            estante.idUsuario = usuario.id;
+            estante.livro.nome = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1));
+            estante.livro.autor = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 2));
+            estante.livro.paginas = sqlite3_column_int(stmt, 3);
+            estante.nota = sqlite3_column_double(stmt, 4);
+            estante.situacao = sqlite3_column_int(stmt, 5);
+            estante.paginasLidas = sqlite3_column_int(stmt, 6);
+            estante.comentario = "";
+
+            if (sqlite3_column_type(stmt, 7) != SQLITE_NULL)
+               estante.comentario = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 7));
+
+            estante.livro.leitores = sqlite3_column_int(stmt, 8);
+            estante.livro.notaGeral = sqlite3_column_double(stmt, 9);
+            usuario.estantes.push_back(estante);
+        }
     }
 
     sqlite3_finalize(stmt);
@@ -226,6 +240,44 @@ int mudaSituacao(int idUsuario, int idLivro, int situacao) {
 }
 
 /**
+ * Registra a leitura de um livro da estante.
+ *
+ * @param estante
+ * @return 0 (sucesso) e 1 (error)
+ */
+int registraLeitura(struct Estante &estante) {
+    sqlite3 *bancoDados;
+    char *erroBanco;
+    int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
+    string mensagemErro = "Ocorreu um erro ao registrar a leitura do livro da estante: ";
+
+    if (retorno != SQLITE_OK) {
+        exibeMensagemErroBancoDados("Não foi possível abrir o banco de dados: ", sqlite3_errmsg(bancoDados));
+        sqlite3_close(bancoDados);
+
+        return 1;
+    }
+
+    string sql = "UPDATE estante SET paginas_lidas = " + to_string(estante.paginasLidas) + ", comentario = '" +
+                 estante.comentario + "' WHERE id_livro = " + to_string(estante.idLivro) + " AND id_usuario = " +
+                 to_string(estante.idUsuario) + ";";
+
+    retorno = sqlite3_exec(bancoDados, sql.c_str(), NULL, 0, &erroBanco);
+
+    if (retorno != SQLITE_OK) {
+        exibeMensagemErroBancoDados(mensagemErro, sqlite3_errmsg(bancoDados));
+        sqlite3_free(erroBanco);
+        sqlite3_close(bancoDados);
+
+        return 1;
+    }
+
+    sqlite3_close(bancoDados);
+
+    return 0;
+}
+
+/**
  * Remove o livro da estante do usuario.
  *
  * @param idUsuario
@@ -246,7 +298,7 @@ int removeLivroEstante(int idUsuario, int idLivro) {
     }
 
     string sql = "DELETE FROM estante WHERE id_usuario = " + to_string(idUsuario) + " AND id_livro = "
-            + to_string(idLivro) + ";";
+                 + to_string(idLivro) + ";";
 
     retorno = sqlite3_exec(bancoDados, sql.c_str(), NULL, 0, &erroBanco);
 

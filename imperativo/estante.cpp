@@ -6,16 +6,49 @@
 using namespace std;
 
 int avalicaoLivro(struct Usuario &usuario);
-
 int edicaoSituacao(struct Usuario &usuario);
-
 void listagemEstantes(struct Usuario &usuario);
-
+struct Estante obtemEstantePorLivro(vector<struct Estante> estantes, struct Livro &livro);
 vector<Livro> obtemLivrosEstante(vector<struct Estante> estantes);
-
 string obtemSituacao(int status);
-
+int registroLeitura(struct Usuario &usuario);
 int remocaoLivroEstante(struct Usuario &usuario);
+
+/**
+ * Registra a leitura de um livro na estante.
+ *
+ * @param usuario
+ * @return
+ */
+int registroLeitura(struct Usuario &usuario) {
+    int retorno = 0;
+    struct Livro livro;
+    struct Estante estante;
+
+    cout << " .::. PrompSkoob .::." << endl;
+    cout << " - Registrar Leitura - " << endl << endl;
+    livro.id = 0;
+    escolheLivro(obtemLivrosEstante(usuario.estantes), livro);
+    estante = obtemEstantePorLivro(usuario.estantes, livro);
+    cout << "Quantas paginas foram lidas? ";
+    cin >> estante.paginasLidas;
+
+    while (estante.paginasLidas < 0 || estante.paginasLidas > livro.paginas) {
+        exibeMensagemErro("Numero de pagina invalida!");
+        cout << "Informe outro numero de paginas: ";
+        cin >> estante.paginasLidas;
+    }
+
+    cout << "Deixe seu comentario sobre o livro: ";
+    getline(cin >> ws, estante.comentario);
+
+    retorno = registraLeitura(estante);
+
+    if (!retorno)
+        exibeMensagem("Registro de leitura realizado com sucesso.");
+
+    return retorno;
+}
 
 /**
  * Avalia o livro da estante.
@@ -36,7 +69,7 @@ int avalicaoLivro(struct Usuario &usuario) {
 
     while (nota < 0 || nota > 5) {
         exibeMensagemErro("Nota invalida!");
-        cout << "Informe outra nota:" << endl;
+        cout << "Informe outra nota:";
         cin >> nota;
     }
 
@@ -62,7 +95,12 @@ void listagemEstantes(struct Usuario &usuario) {
                 struct Estante estante = usuario.estantes.at(indice);
                 cout << "#" << estante.livro.id << " - " << estante.livro.nome << " - " << estante.livro.autor << " ("
                      << estante.livro.paginas << "pgs) [" << obtemSituacao(estante.situacao) << "] - Minha Nota: "
-                     << estante.nota << endl;
+                     << estante.nota;
+
+                if (!estante.comentario.empty())
+                    cout << " - Comentario: " << estante.comentario;
+
+                cout << " - Paginas lidas: " << estante.paginasLidas << endl;
             }
             cout << endl;
         }
@@ -91,6 +129,26 @@ int edicaoSituacao(struct Usuario &usuario) {
         exibeMensagem("O status da leitura modificado com sucesso.");
 
     return retorno;
+}
+
+/**
+ * Retorna a estante de acordo com o livro.
+ *
+ * @param estantes
+ * @param livro
+ * @return
+ */
+struct Estante obtemEstantePorLivro(vector<struct Estante> estantes, struct Livro &livro) {
+    struct Estante estante;
+    estante.idLivro = 0;
+
+    for (size_t indice = 0; indice < estantes.size(); indice++) {
+        if (estantes.at(indice).idLivro == livro.id) {
+            return estantes.at(indice);
+        }
+    }
+
+    return estante;
 }
 
 /**
