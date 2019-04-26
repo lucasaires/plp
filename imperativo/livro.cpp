@@ -185,14 +185,15 @@ int edicaoLivro() {
 void listagemLivros() {
     if (!listaLivros(livros)) {
         if (livros.size() == 0) {
-            cout << "--- Nenhum livro encontrado! ---" << endl << endl;
+            exibeMensagem("Nenhum livro cadastrado!");
         } else {
             string linha;
 
             for (size_t indice = 0; indice < livros.size(); indice++) {
                 struct Livro livro = livros.at(indice);
                 cout << "#" << livro.id << " - " << livro.nome << " - " << livro.autor << " (" << livro.paginas
-                     << "pgs) " << obtemGenerosExistentes(livro) << endl;
+                     << "pgs) " << obtemGenerosExistentes(livro) << " - Nota Geral: " << livro.notaGeral << " - Leitores: "
+                     << livro.leitores << endl;
             }
             cout << endl;
         }

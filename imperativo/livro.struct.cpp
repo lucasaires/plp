@@ -13,5 +13,5 @@ struct Livro {
     int horror;
     int biografia;
     int leitores;
-    int nota;
+    float notaGeral;
 };

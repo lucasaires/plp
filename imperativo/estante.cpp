@@ -5,13 +5,48 @@
 
 using namespace std;
 
-vector<struct Estante> estantes;
+int avalicaoLivro(struct Usuario &usuario);
+
+int edicaoSituacao(struct Usuario &usuario);
 
 void listagemEstantes(struct Usuario &usuario);
-int mudaSituacao(struct Usuario &usuario);
+
 vector<Livro> obtemLivrosEstante(vector<struct Estante> estantes);
+
 string obtemSituacao(int status);
+
 int remocaoLivroEstante(struct Usuario &usuario);
+
+/**
+ * Avalia o livro da estante.
+ *
+ * @param usuario
+ * @return 0 (sucesso) e 1 (erro)
+ */
+int avalicaoLivro(struct Usuario &usuario) {
+    int retorno, nota = 0;
+
+    struct Livro livro;
+    cout << " .::. PrompSkoob .::." << endl;
+    cout << " - Avaliar Livro da Estante  - " << endl << endl;
+    livro.id = 0;
+    escolheLivro(obtemLivrosEstante(usuario.estantes), livro);
+    cout << "De sua nota de avalicao no intervalo de 1 a 5: ";
+    cin >> nota;
+
+    while (nota < 0 || nota > 5) {
+        exibeMensagemErro("Nota invalida!");
+        cout << "Informe outra nota:" << endl;
+        cin >> nota;
+    }
+
+    retorno = avaliaLivro(usuario.id, livro.id, nota);
+
+    if (!retorno)
+        exibeMensagem("Avaliacao realizada com sucesso.");
+
+    return retorno;
+}
 
 /**
  * Lista todos os livros disponiveis na estante.
@@ -19,14 +54,15 @@ int remocaoLivroEstante(struct Usuario &usuario);
 void listagemEstantes(struct Usuario &usuario) {
     if (!listaLivrosEstante(usuario)) {
         if (usuario.estantes.size() == 0) {
-            cout << "--- Nenhum livro encontrado! ---" << endl << endl;
+            exibeMensagem("Nenhum livro adicionado a sua estante!");
         } else {
             string linha;
 
             for (size_t indice = 0; indice < usuario.estantes.size(); indice++) {
                 struct Estante estante = usuario.estantes.at(indice);
                 cout << "#" << estante.livro.id << " - " << estante.livro.nome << " - " << estante.livro.autor << " ("
-                     << estante.livro.paginas << "pgs) [" << obtemSituacao(estante.situacao) << "]" << endl;
+                     << estante.livro.paginas << "pgs) [" << obtemSituacao(estante.situacao) << "] - Minha Nota: "
+                     << estante.nota << endl;
             }
             cout << endl;
         }
@@ -39,7 +75,7 @@ void listagemEstantes(struct Usuario &usuario) {
  * @param usuario
  * @return 0 (sucesso) e 1 (erro)
  */
-int mudaSituacao(struct Usuario &usuario) {
+int edicaoSituacao(struct Usuario &usuario) {
     int retorno, situacao;
 
     struct Livro livro;
@@ -49,7 +85,7 @@ int mudaSituacao(struct Usuario &usuario) {
     escolheLivro(obtemLivrosEstante(usuario.estantes), livro);
     cout << "Digite o status de leitura do livro (Nao Lido[1], Lendo[2], Lido[3], Abandonei[4]) : ";
     cin >> situacao;
-    retorno = mudarSituacao(usuario.id, livro.id, situacao);
+    retorno = mudaSituacao(usuario.id, livro.id, situacao);
 
     if (!retorno)
         exibeMensagem("O status da leitura modificado com sucesso.");

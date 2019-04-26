@@ -186,6 +186,8 @@ int geraIDLivro() {
  * @return 0 (sucesso) e 1 (erro)
  */
 int listaLivros(vector<struct Livro> &livros) {
+    criaTabelaLivro();
+
     sqlite3 *bancoDados;
     sqlite3_stmt *stmt;
     int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
@@ -193,18 +195,20 @@ int listaLivros(vector<struct Livro> &livros) {
     livros.clear();
 
     if (retorno != SQLITE_OK) {
-        cerr << "Não foi possível abrir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
+        exibeMensagemErroBancoDados("Não foi possível abrir o banco de dados: ", sqlite3_errmsg(bancoDados));
         sqlite3_finalize(stmt);
         sqlite3_close(bancoDados);
 
         return 1;
     }
 
-    string sql = "SELECT * FROM livro;";
+    string sql = "SELECT *, (SELECT COUNT(id_livro) FROM estante WHERE id_livro = id) AS leitores, "
+                 "(SELECT AVG(nota) FROM estante WHERE id_livro = id) AS nota_geral FROM livro;";
+
     retorno = sqlite3_prepare(bancoDados, sql.c_str(), -1, &stmt, NULL);
 
     if (retorno != SQLITE_OK) {
-        cerr << mensagemErro << sqlite3_errmsg(bancoDados) << endl;
+        exibeMensagemErroBancoDados(mensagemErro, sqlite3_errmsg(bancoDados));
         sqlite3_finalize(stmt);
         sqlite3_close(bancoDados);
 
@@ -217,7 +221,7 @@ int listaLivros(vector<struct Livro> &livros) {
         if (retorno == SQLITE_DONE) break;
 
         if (retorno != SQLITE_ROW) {
-            cerr << mensagemErro << sqlite3_errmsg(bancoDados) << endl;
+            exibeMensagemErroBancoDados(mensagemErro, sqlite3_errmsg(bancoDados));
             sqlite3_finalize(stmt);
             sqlite3_close(bancoDados);
 
@@ -234,6 +238,8 @@ int listaLivros(vector<struct Livro> &livros) {
         livro.romance = sqlite3_column_int(stmt, 6);
         livro.horror = sqlite3_column_int(stmt, 7);
         livro.biografia = sqlite3_column_int(stmt, 8);
+        livro.leitores = sqlite3_column_int(stmt, 9);
+        livro.notaGeral = sqlite3_column_double(stmt, 10);
         livros.push_back(livro);
     }
 

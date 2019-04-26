@@ -171,10 +171,10 @@ void exibeMenuMinhaEstante() {
 
         switch (opcao) {
             case 1:
-                mudaSituacao(usuario);
+                edicaoSituacao(usuario);
                 break;
             case 2:
-                edicaoLivro();
+                avalicaoLivro(usuario);
                 break;
             case 3:
                 remocaoLivroEstante(usuario);

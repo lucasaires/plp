@@ -7,6 +7,6 @@ struct Estante {
     int idUsuario;
     struct Usuario usuario;
     struct Livro livro;
-    int nota;
+    float nota;
     int situacao;
 };

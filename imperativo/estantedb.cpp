@@ -8,8 +8,9 @@
 using namespace std;
 
 int adicionaLivroEstante(int idUsuario, int idLivro);
+int avaliaLivro(int idUsuario, int idLivro, int nota);
 void criaTabelaEstante();
-int mudarSituacao(int idUsuario, int idLivro, int situacao);
+int mudaSituacao(int idUsuario, int idLivro, int situacao);
 int removeLivroEstante(int idUsuario, int idLivro);
 
 void criaTabelaEstante() {
@@ -24,7 +25,7 @@ void criaTabelaEstante() {
     string sql = "CREATE TABLE IF NOT EXISTS estante("
                  "id_usuario INT NOT NULL, "
                  "id_livro INT NOT NULL, "
-                 "nota INT NOT NULL, "
+                 "nota REAL NOT NULL, "
                  "situacao INT NOT NULL, "
                  "FOREIGN KEY (id_usuario) REFERENCES usuario(id) ON UPDATE CASCADE ON DELETE CASCADE, "
                  "FOREIGN KEY (id_livro) REFERENCES livro(id) ON UPDATE CASCADE ON DELETE CASCADE, "
@@ -81,6 +82,45 @@ int adicionaLivroEstante(int idUsuario, int idLivro) {
 }
 
 /**
+ * Avalia um livro da estante.
+ *
+ * @param idUsuario
+ * @param idLivro
+ * @param nota
+ * @return 0 (sucesso) e 1 (error)
+ */
+int avaliaLivro(int idUsuario, int idLivro, int nota) {
+    sqlite3 *bancoDados;
+    char *erroBanco;
+    int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
+    string mensagemErro = "Ocorreu um erro ao avaliar o livro da estante: ";
+
+    if (retorno != SQLITE_OK) {
+        exibeMensagemErroBancoDados("Não foi possível abrir o banco de dados: ", sqlite3_errmsg(bancoDados));
+        sqlite3_close(bancoDados);
+
+        return 1;
+    }
+
+    string sql = "UPDATE estante SET nota = " + to_string(nota) + " WHERE id_livro = " + to_string(idLivro) +
+                 " AND id_usuario = " + to_string(idUsuario) + ";";
+
+    retorno = sqlite3_exec(bancoDados, sql.c_str(), NULL, 0, &erroBanco);
+
+    if (retorno != SQLITE_OK) {
+        exibeMensagemErroBancoDados(mensagemErro, sqlite3_errmsg(bancoDados));
+        sqlite3_free(erroBanco);
+        sqlite3_close(bancoDados);
+
+        return 1;
+    }
+
+    sqlite3_close(bancoDados);
+
+    return 0;
+}
+
+/**
  * Lista todos os livros da estante do usuario.
  *
  * @param livros
@@ -101,8 +141,10 @@ int listaLivrosEstante(struct Usuario &usuario) {
         return 1;
     }
 
-    string sql = "SELECT id_livro, nome, autor, paginas, nota, situacao FROM estante INNER JOIN livro ON "
-                 "livro.id = id_livro WHERE id_usuario = " + to_string(usuario.id) + " ;";
+    string sql = "SELECT id_livro, nome, autor, paginas, nota, situacao, COUNT(id_livro) AS leitores, (SELECT AVG(nota) "
+                 "FROM estante WHERE livro.id = id_livro) AS nota_geral FROM estante INNER JOIN livro ON livro.id = "
+                 "id_livro WHERE id_usuario = " + to_string(usuario.id) + " ;";
+
     retorno = sqlite3_prepare(bancoDados, sql.c_str(), -1, &stmt, NULL);
 
     if (retorno != SQLITE_OK) {
@@ -131,8 +173,10 @@ int listaLivrosEstante(struct Usuario &usuario) {
         estante.livro.nome = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1));
         estante.livro.autor = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 2));
         estante.livro.paginas = sqlite3_column_int(stmt, 3);
-        estante.nota = sqlite3_column_int(stmt, 4);
+        estante.nota = sqlite3_column_double(stmt, 4);
         estante.situacao = sqlite3_column_int(stmt, 5);
+        estante.livro.leitores = sqlite3_column_int(stmt, 6);
+        estante.livro.notaGeral = sqlite3_column_double(stmt, 7);
         usuario.estantes.push_back(estante);
     }
 
@@ -150,7 +194,7 @@ int listaLivrosEstante(struct Usuario &usuario) {
  * @param situacao
  * @return 0 (sucesso) e 1 (error)
  */
-int mudarSituacao(int idUsuario, int idLivro, int situacao) {
+int mudaSituacao(int idUsuario, int idLivro, int situacao) {
     sqlite3 *bancoDados;
     char *erroBanco;
     int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
