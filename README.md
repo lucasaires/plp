@@ -21,6 +21,27 @@ dada por usuários do **PrompSkoob**.
 
 ## Como executar?
 
+Deve ter o compilador de C++, `g++` e executar o seguinte comando dentro da pasta do projeto:
 ```
 g++ main.cpp -o main -l sqlite3
+```
+Após compilado, execute:
+```
+./main
+```
+É necessário ter o sqlite3 instalado na sua máquina, nos sistemas Linux/Mac vem previamente instalado, mas caso não 
+tenha instalado utilize as seguintes [instruções](https://www.sqlite.org/download.html) ou via *packagers manager:*
+
+Linux
+```
+apt-get install sqlite3
+apt-get install libsqlite3-dev
+```
+Windows, usando [Chocolatey](https://chocolatey.org)
+```
+choco install sqlite
+```
+Mac OS
+```
+brew install sqlite
 ```
