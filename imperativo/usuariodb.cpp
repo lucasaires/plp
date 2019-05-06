@@ -1,6 +1,8 @@
 #include <iostream>
 #include <sqlite3.h>
 #include <vector>
+#import "constantes.cpp"
+#import "utilitario.cpp"
 
 using namespace std;
 

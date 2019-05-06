@@ -18,3 +18,9 @@ Mas, caso prefira, poderá acessá-lo como visitante, podendo consultar os livro
 dada por usuários do **PrompSkoob**.
 
 [Documentação completa.]()
+
+## Como executar?
+
+```
+g++ main.cpp -o main -l sqlite3
+```

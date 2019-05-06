@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include "constantes.cpp"
+#include "utilitario.cpp"
 #include "livro.struct.cpp"
 #include "livrodb.cpp"
 #include "estantedb.cpp"
@@ -64,8 +66,15 @@ int cadastroLivro() {
     getline(cin >> ws, livro.nome);
     cout << "Autor: ";
     getline(cin >> ws, livro.autor);
-    cout << "Total de páginas: ";
+    cout << "Total de paginas: ";
     cin >> livro.paginas;
+
+    while (livro.paginas <= 0) {
+        exibeMensagemErro("Total de paginas invalida!");
+        cout << "Total de paginas: ";
+        cin >> livro.paginas;
+    }
+
     cout << "Este livro é de ficcao? (S/N): ";
     cin >> escolha;
     livro.ficcao = (escolha == 's' || escolha == 'S') ? 1 : 0;
@@ -138,6 +147,13 @@ int edicaoLivro() {
             case 3:
                 cout << "Total de Paginas: ";
                 cin >> livro.paginas;
+
+                while (livro.paginas <= 0) {
+                    exibeMensagemErro("Total de paginas invalida!");
+                    cout << "Total de paginas: ";
+                    cin >> livro.paginas;
+                }
+
                 break;
             case 4:
                 cout << "Livro de ficcao? (S/N): ";

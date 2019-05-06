@@ -13,11 +13,11 @@
 
 #include <iostream>
 #include <string>
-#include "constantes.cpp"
-#include "utilitario.cpp"
-#include "usuario.cpp"
-#include "livro.cpp"
-#include "estante.cpp"
+#import "constantes.cpp"
+#import "usuario.cpp"
+#import "livro.cpp"
+#import "estante.cpp"
+#import "utilitario.cpp"
 
 using namespace std;
 

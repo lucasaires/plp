@@ -1,7 +1,9 @@
 #include <iostream>
 #include <sqlite3.h>
 #include <vector>
+#include "constantes.cpp"
 #include "estante.struct.cpp"
+#include "utilitario.cpp"
 
 using namespace std;
 
@@ -142,8 +144,7 @@ int listaLivrosEstante(struct Usuario &usuario) {
     }
 
     string sql =
-            "SELECT id_livro, nome, autor, paginas, nota, situacao, paginas_lidas, comentario, COUNT(id_livro) AS "
-            "leitores, (SELECT AVG(nota) FROM estante WHERE livro.id = id_livro) AS nota_geral FROM estante INNER "
+            "SELECT id_livro, nome, autor, paginas, nota, situacao, paginas_lidas, comentario FROM estante INNER "
             "JOIN livro ON livro.id = id_livro WHERE id_usuario = " + to_string(usuario.id) + " ;";
 
     retorno = sqlite3_prepare(bancoDados, sql.c_str(), -1, &stmt, NULL);

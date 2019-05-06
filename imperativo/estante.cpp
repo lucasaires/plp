@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include "constantes.cpp"
+#include "utilitario.cpp"
 
 using namespace std;
 
@@ -121,6 +123,12 @@ int edicaoSituacao(struct Usuario &usuario) {
     escolheLivro(obtemLivrosEstante(usuario.estantes), livro);
     cout << "Digite o status de leitura do livro (Nao Lido[1], Lendo[2], Lido[3], Abandonei[4]): ";
     cin >> situacao;
+
+    while (situacao <= 0 || situacao > 4) {
+        exibeMensagemErro("Status invalido!");
+        cout << "Digite o status de leitura do livro (Nao Lido[1], Lendo[2], Lido[3], Abandonei[4]): ";
+        cin >> situacao;
+    }
     retorno = mudaSituacao(usuario.id, livro.id, situacao);
 
     if (!retorno)
