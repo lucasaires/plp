@@ -32,7 +32,46 @@ acaoMenu 7 True = sairConta
 acaoMenu 8 True = sair
 
 cadastro :: IO()
-cadastro = putStrLn "cadastrando"
+cadastro = do 
+    putStrLn " - Quero me Cadastrar -"
+    
+    putStrLn "Nome: "
+    nome <- getLine 
+    
+    putStrLn "Email: "
+    email <- getLine
+    
+    putStrLn "Senha: "
+    senha <- getLine
+
+    putStrLn "Tem interesse em livros de ficcao? (S/N): "
+    escolha1 <- getLine
+
+    putStrLn "Tem interesse em livros de nao ficcao? (S/N): "
+    escolha2 <- getLine
+
+    putStrLn "Tem interesse em livros de romance? (S/N): "
+    escolha3 <- getLine
+
+    putStrLn "Tem interesse em livros de horror? (S/N): "
+    escolha4 <- getLine
+
+    putStrLn "Tem interesse em livros de biografia? (S/N): "
+    escolha5 <- getLine
+    
+    verificaEscolha escolha1
+    verificaEscolha escolha2
+    verificaEscolha escolha3
+    verificaEscolha escolha4
+    verificaEscolha escolha5
+
+
+verificaEscolha :: String -> IO ()
+verificaEscolha escolha = if (escolha /= "s" && escolha /= "S" && escolha /= "n" && escolha /= "N") then do 
+    putStrLn "..." 
+    putStrLn "Erro"
+    cadastro
+    else putStr ""
 
 autenticaoUsuario :: String -> String -> Bool -- ESTA FUNCAO SERA REIMPLEMENTADO NA PARTE DE USUARIO
 autenticaoUsuario nome senha = True
@@ -55,7 +94,18 @@ pesquisarNoAcervo :: IO()
 pesquisarNoAcervo = putStrLn "pesquisando"
 
 editarPerfil :: IO()
-editarPerfil = putStrLn "editando perfil"
+editarPerfil = do
+    putStrLn ".::. PrompSkoob .::."
+    putStrLn " - Editar Meu Perfil - "
+    putStrLn "Qual campo deseja modificar? "
+    putStrLn "(1) Nome: "
+    putStrLn "(2) E-mail: "
+    putStrLn "(3) Senha: "
+    putStrLn "(4) Interesse em Ficcao? (S/N): "
+    putStrLn "(5) Interesse em Nao Ficcao? (S/N): "
+    putStrLn "(6) Interesse em Romance? (S/N): "
+    putStrLn "(7) Interesse em Horror? (S/N): "
+    putStrLn "(8) Interesse em Biografia? (S/N): "
 
 gerenciaLivro :: IO()
 gerenciaLivro = putStrLn "gerenciando livro"
