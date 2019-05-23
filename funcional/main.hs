@@ -84,15 +84,18 @@ verificaEscolha :: String -> String -> String -> String -> String -> IO ()
 verificaEscolha escolha1 escolha2 escolha3 escolha4 escolha5 = if (escolha1 /= "s" && escolha1 /= "n" ) then do
     cadastropart3
     else if (escolha2 /= "s" && escolha2 /= "n" && escolha2 /= "N" && escolha2 /= "S") then do
+        putStrLn "Erro"
         cadastropart3
         else if (escolha3 /= "s" && escolha3 /= "n" && escolha3 /= "N" && escolha3 /= "S") then do 
+            putStrLn "Erro"
             cadastropart3
             else if (escolha4 /= "s" && escolha4 /= "n" && escolha4 /= "N" && escolha4 /= "S") then do
+                putStrLn "Erro"
                 cadastropart3
                 else if (escolha5 /= "s" && escolha5 /= "n" && escolha5 /= "N" && escolha5 /= "S") then do
+                    putStrLn "Erro"
                     cadastropart3
                     else do
-                        putStrLn "Erro!"
                         operacaoSucesso
 
 autenticaoUsuario :: String -> String -> Bool -- ESTA FUNCAO SERA REIMPLEMENTADO NA PARTE DE USUARIO
@@ -118,9 +121,14 @@ pesquisarNoAcervo = do
     putStrLn " - Pesquisar Acervo - "
     putStrLn "Pesquise pelo titulo: "
     livro <- getLine
+    validaPesquisa livro
     putStrLn ""
     -- pesquisa no bd     
-    
+
+validaPesquisa :: String -> IO()
+validaPesquisa livro 
+    |livro == " " = pesquisarNoAcervo
+    |otherwise = putStr ""
 
 editarPerfil :: IO ()
 editarPerfil = do
@@ -275,7 +283,8 @@ verificaPaginas :: String -> String -> Int -> IO()
 verificaPaginas nome autor paginas 
     | paginas < 0 = cadastroLivro
     | nome == " " = cadastroLivro
-    | otherwise = operacaoSucesso
+    | autor == " " = cadastroLivro
+    | otherwise = operacaoSucesso -- chama o bd
     
 
 editarLivro :: IO() 
