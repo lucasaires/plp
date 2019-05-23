@@ -44,6 +44,20 @@ cadastro = do
     putStrLn "Senha: "
     senha <- getLine
 
+    cadastropart2 nome email senha
+    putStr ""
+
+
+cadastropart2 :: String -> String -> String -> IO() 
+cadastropart2 campo campo2 campo3
+    |campo == " " = cadastro
+    |campo2 == " " = cadastro
+    |campo3 == " " = cadastro 
+    |otherwise = cadastropart3
+
+cadastropart3 :: IO()
+cadastropart3 = do
+    
     putStrLn "Tem interesse em livros de ficcao? (S/N): "
     escolha1 <- getLine
 
@@ -59,26 +73,27 @@ cadastro = do
     putStrLn "Tem interesse em livros de biografia? (S/N): "
     escolha5 <- getLine
     
-    verificaEscolha escolha1
-    verificaEscolha escolha2
-    verificaEscolha escolha3
-    verificaEscolha escolha4
-    verificaEscolha escolha5
+    verificaEscolha escolha1 escolha2 escolha3 escolha4 escolha5
+     
+    putStr""    
 
-    putStr""
-    
 
     --chama o metodo bd
 
-
-verificaEscolha :: String -> IO ()
-verificaEscolha escolha = if (escolha == "s" || escolha == "S" || escolha == "n" || escolha == "N") then do 
-    putStr "" 
-    
-    else do 
-        putStrLn "Erro"
-        cadastro
-        putStr ""
+verificaEscolha :: String -> String -> String -> String -> String -> IO ()
+verificaEscolha escolha1 escolha2 escolha3 escolha4 escolha5 = if (escolha1 /= "s" && escolha1 /= "n" ) then do
+    cadastropart3
+    else if (escolha2 /= "s" && escolha2 /= "n" && escolha2 /= "N" && escolha2 /= "S") then do
+        cadastropart3
+        else if (escolha3 /= "s" && escolha3 /= "n" && escolha3 /= "N" && escolha3 /= "S") then do 
+            cadastropart3
+            else if (escolha4 /= "s" && escolha4 /= "n" && escolha4 /= "N" && escolha4 /= "S") then do
+                cadastropart3
+                else if (escolha5 /= "s" && escolha5 /= "n" && escolha5 /= "N" && escolha5 /= "S") then do
+                    cadastropart3
+                    else do
+                        putStrLn "Erro!"
+                        operacaoSucesso
 
 autenticaoUsuario :: String -> String -> Bool -- ESTA FUNCAO SERA REIMPLEMENTADO NA PARTE DE USUARIO
 autenticaoUsuario nome senha = True
@@ -124,8 +139,20 @@ editarPerfil = do
     campo <- readLn :: IO Int
 
     validaEntradaPerfil campo 
+
     --chama o metodo bd 
-    putStrLn "Perfil editado com sucesso"
+    putStrLn "Deseja editar outro campo? (S/N): "
+    desejo <- getLine
+
+    verificaDesejo desejo
+    putStr ""
+
+
+verificaDesejo :: String -> IO()
+verificaDesejo desejo = if (desejo == "s" || desejo == "S" || desejo == "n" || desejo == "n") then do
+    editarPerfil 
+    else do 
+        putStrLn "Perfil editado com sucesso"
 
 modificaPerfil :: Int -> IO()
 modificaPerfil 1 = modificaNome
@@ -142,48 +169,56 @@ modificaNome :: IO()
 modificaNome = do
     putStr "Nome: "
     nome <- getLine
+    -- atualiza bd 
     putStr ""
 
 modifcaEmail :: IO()
 modifcaEmail = do 
     putStr "Email: "
     email <- getLine
+    -- atualiza bd
     putStr ""
 
 modificaSenha :: IO()
 modificaSenha = do 
     putStr "Senha: "
     senha <- getLine
+    -- atualiza bd 
     putStr ""
 
 modificaFiccao :: IO()
 modificaFiccao = do 
     putStr "Interesse em Ficcao? (S/N): "
     interesse <- getLine
+    -- atualiza bd 
     putStr ""
 
 modificaNFiccao :: IO() 
 modificaNFiccao = do 
     putStr "Interesse em Nao Ficcao? (S/N): "
     interesse <- getLine
+    -- atualiza bd
     putStr ""
 
 modificaRomace :: IO()
 modificaRomace = do
     putStr "Interesse em Romance? (S/N): "
     interesse <- getLine
+    -- atualiza bd
     putStr ""
 
 modificaHorror :: IO()
 modificaHorror = do
     putStr "Interesse em Horror? (S/N): "
     interesse <- getLine
+    -- atualiza bd
     putStr ""
 
 modificaBiografia :: IO()
 modificaBiografia = do 
     putStr "Interesse em Biografia (S/N): "
     biografia <- getLine
+    -- atualiza bd
     putStr ""
 
 
@@ -202,11 +237,11 @@ gerenciaLivro = do
     putStrLn "Cadastrar Livro"
     putStrLn "(1) Cadastrar Livro | (2) Editar | (3) Remover | (4) Adicionar a Estante | (5) Voltar"
     opcao <- readLn :: IO Int 
-    verifcaGerenciaLivro opcao
+    verificaGerenciaLivro opcao
 
 
-verifcaGerenciaLivro :: Int -> IO() 
-verifcaGerenciaLivro opcao 
+verificaGerenciaLivro :: Int -> IO() 
+verificaGerenciaLivro opcao 
     | opcao < 1 || opcao > 5 = gerenciaLivro
     | otherwise = livroValido opcao 
 
