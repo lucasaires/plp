@@ -288,7 +288,27 @@ verificaPaginas nome autor paginas
     
 
 editarLivro :: IO() 
-editarLivro = putStrLn "editando livro"
+editarLivro = do
+    
+    [(String,String)] 
+    putStrLn ".::. PrompSkoob .::."
+    putStrLn " - Editar Livro - "
+    putStrLn "Qual campo deseja modificar? "
+    putStrLn "(1) Nome: "
+    putStrLn "(2) Autor: "
+    putStrLn "(3) Total Paginas: "
+    putStrLn "(4) Ficcao"
+    putStrLn "(5) Nao Ficcao: "
+    putStrLn "(6) Romance: "
+    putStrLn "(7) Horror:  "
+    putStrLn "(8) Biografia: "
+
+    campo <- readLn :: IO Int
+
+    validaEntradaPerfil campo
+
+
+
 
 removerLivro :: IO()
 removerLivro = putStrLn "removendoLivro"
