@@ -17,55 +17,31 @@ usufruir de recursos como recomendações de livros, registro de leitura, gerenc
 Mas, caso prefira, poderá acessá-lo como visitante, podendo consultar os livros do acervo, visualizar a nota de avaliação
 dada por usuários do **PrompSkoob**.
 
-## Funcionalidades
+[Documentação completa.]()
 
-### Menu Principal
+## Como executar?
 
-![Menu Principal Logado](./imperativo/docs/fig1.png)
+Deve ter o compilador de C++, `g++` e executar o seguinte comando dentro da pasta do projeto:
+```
+g++ main.cpp -o main -l sqlite3
+```
+Após compilado, execute:
+```
+./main
+```
+É necessário ter o sqlite3 instalado na sua máquina, nos sistemas Linux/Mac vem previamente instalado, mas caso não 
+tenha instalado utilize as seguintes [instruções](https://www.sqlite.org/download.html) ou via *packagers manager:*
 
-*Figura 01: Menu principal quando usuário está autenticado.*
-
-![Menu Principal Visitante](./imperativo/docs/fig2.png)
-
-*Figura 02: Menu principal quando usuário é visitante.*
-
-### Funcionalidade 01: Quero me Cadastrar
-
-![Cadastro Usuário](./imperativo/docs/fig3.png)
-
-*Figura 03:  Exibição  quando usuário escolhe a opção [1] para efetuar o cadastro de usuário.*
-
-Será exibido um submenu para o usuário confirme se deseja se cadastrar ou voltar para o menu anterior.
-
-O usuário poderá  se cadastrar no PrompSkoob para ter acesso a recursos exclusivos.
-
-O usuário deverá cadastrar os seguintes campos: **nome** (obrigatório),  **e-mail** (único e obrigatório) que será utilizado para autenticação no programa, **senha** de acesso (obrigatório) e a escolha de **interesses** de gêneros de livros que poderá ser utilizado no futuro para recomendação de livros. Após concluído o cadastrado o menu principal irá mudar para o menu visitante (figura 02).
-
-Caso ocorra algum erro ao registrar as informações será exibido um mensagem de erro.
-
-### Funcionalidade 02: Autenticação
-
-![Autenticação Usuário](./imperativo/docs/fig4.png)
-
-*Figura 04: Exibição  quando usuário escolhe a opção [2] para efetuar a autenticação do usuário.*
-
-Ao escolher a opção `[2]` o usuário poderá realizar autenticação utilizando o e-mail e senha definido no momento do 
-cadastro. Os campos **e-mail** (obrigatório) e **senha** (obrigatório).
-
-Caso não exista um usuário com e-mail e senha válido será exibida uma mensagem de erro.
-
-### Funcionalidade 03: Editar Perfil
-
-![Opção edição usuário](./imperativo/docs/fig5.png)
-
-*Figura 05: Pelo menu principal quando usuário logado, o usuário escolhe a opção [1] para efetuar a edição de usuário.*
-
-O usuário irá escolher a opção `[1]`  e em seguida, será possível selecionar qual campo deseja alterar. 
-
-![Edição usuário](./imperativo/docs/fig6.png)
-
-*Figura 06: Exibição  quando usuário efetua a edição do perfil do usuário.*
-
-Após selecionado o campo, o usuário irá informar o novo valor do campo. Após concluída a edição o usuário poderá editar outro campo, caso ache necessário.
-
-Caso o **ID** ou **Campo** informado seja inválido será lançada uma mensagem de erro.
+Linux
+```
+apt-get install sqlite3
+apt-get install libsqlite3-dev
+```
+Windows, usando [Chocolatey](https://chocolatey.org)
+```
+choco install sqlite
+```
+Mac OS
+```
+brew install sqlite
+```

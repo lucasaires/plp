@@ -2,14 +2,14 @@
 #include <string>
 #import "constantes.cpp"
 #import "utilitario.cpp"
-#import "usuario.model.cpp"
+#import "usuario.struct.cpp"
 #import "usuariodb.cpp"
 
 using namespace std;
 
 int cadastroUsuario();
-
 int edicaoPerfilUsuario(struct Usuario &usuario);
+int remocaoUsuario(int id);
 
 /**
  * Exibe o formulario de cadastro de usuario.
@@ -97,7 +97,7 @@ int edicaoPerfilUsuario(struct Usuario &usuario) {
     char ficcao = (usuario.ficcao == 1) ? 'S' : 'N';
     cout << "(4) Interesse em Ficcao? (S/N): " << ficcao << endl;
     char naoFiccao = (usuario.naoFiccao == 1) ? 'S' : 'N';
-    cout << "(5) Interesse em Não Ficcao? (S/N): " << naoFiccao << endl;
+    cout << "(5) Interesse em Nao Ficcao? (S/N): " << naoFiccao << endl;
     char romance = (usuario.romance == 1) ? 'S' : 'N';
     cout << "(6) Interesse em Romance? (S/N): " << romance << endl;
     char horror = (usuario.horror == 1) ? 'S' : 'N';
@@ -159,6 +159,22 @@ int edicaoPerfilUsuario(struct Usuario &usuario) {
 
     if (!retorno) {
         exibeMensagem("Perfil editado com sucesso.");
+    }
+
+    return retorno;
+}
+
+/**
+ * Remove o perfil do usuario atual.
+ *
+ * @param id
+ * @return 0 (sucesso) e 1 (erro)
+ */
+int remocaoUsuario(int id) {
+    int retorno = removeUsuario(id);
+
+    if(!retorno) {
+        exibeMensagem("Usuario removido com sucesso.");
     }
 
     return retorno;

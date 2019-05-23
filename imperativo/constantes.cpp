@@ -1,9 +1,15 @@
-const char * BANCO_DADOS = "prompskoob.sqlite";
+const char *BANCO_DADOS = "prompskoob.sqlite";
 
 /**
  *  Menu principal
  */
 const int M_EDITAR_PERFIL = 1;
+const int M_CADASTRAR_LIVRO = 2;
+const int M_MINHA_ESTANTE = 3;
+const int M_PESQUISA = 4;
+const int M_RECOMENDACOES = 5;
+const int M_REMOVER_PERFIL = 6;
+const int M_SAIR_CONTA = 7;
 const int M_SAIR = 8;
 
 /**
@@ -11,30 +17,13 @@ const int M_SAIR = 8;
  */
 const int MV_CADASTRO_USUARIO = 1;
 const int MV_AUTENTICACAO = 2;
+const int MV_PESQUISA = 3;
 const int MV_SAIR = 4;
 
 /**
- * Indices do array tipo usuario.
+ * Situacoes da estante.
  */
-const int U_ID = 0;
-const int U_NOME = 1;
-const int U_EMAIL = 2;
-const int U_SENHA = 3;
-const int U_INTERESSES = 4;
-
-
-/**
- * Indices do array tipo estante.
- */
-const int E_USUARIO = 0;
-const int E_LIVRO = 1;
-
-/**
- * status de leitura.
- */
-const int N_LIDO = 1;
+const int NAO_LIDO = 1;
 const int LENDO = 2;
 const int LIDO = 3;
-
-
- 
+const int ABANDONEI = 4;

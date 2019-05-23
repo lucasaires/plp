@@ -12,11 +12,11 @@
  */
 
 #include <iostream>
-#include <stdio.h>
 #include <string>
 #import "constantes.cpp"
-#import "livrosdb.cpp"
 #import "usuario.cpp"
+#import "livro.cpp"
+#import "estante.cpp"
 #import "utilitario.cpp"
 
 using namespace std;
@@ -24,23 +24,35 @@ using namespace std;
 int estaLogado = 0;
 struct Usuario usuario;
 
-//Definicoes das funcoes basicas do sistema.
-void usuarios();
-void livros();
-void minhaEstante();
-void pesquisas();
-void recomendacoes();
-void cadastraUsuario();
+void exibeAutenticacaoUsuario();
 void exibeMenu();
+void exibeMenuLivro();
+void exibeMenuMinhaEstante();
+void exibeMenuRecomendacao();
 void exibeMenuUsuario();
 void exibeMenuVisitante();
-void exibeAutenticacaoUsuario();
-void exibeCadastroUsuario();
-void exibeEdicaoPerfilUsuario();
+void exibeRemoveUsuario();
 
 int main() {
+    criaTabelaEstante();
+    criaTabelaUsuario();
+    criaTabelaLivro();
     exibeMenu();
     return 0;
+}
+
+/**
+ * Exibe autenticacao de usuario.
+ */
+void exibeAutenticacaoUsuario() {
+    usuario = autenticacaoUsuario();
+
+    if (usuario.id > 0) {
+        estaLogado = 1;
+    } else {
+        estaLogado = 0;
+    }
+    exibeMenu();
 }
 
 /**
@@ -65,7 +77,7 @@ void exibeMenuUsuario() {
         cout << " - Menu Principal - " << endl;
         cout << " Ola, " << usuario.nome << "!" << endl << endl;
         cout << " (1) Editar meu perfil" << endl;
-        cout << " (2) Gerenciar livros" << endl;
+        cout << " (2) Gerenciar livro" << endl;
         cout << " (3) Minha estante" << endl;
         cout << " (4) Pesquisar no acervo" << endl;
         cout << " (5) Recomendações de livros" << endl;
@@ -77,11 +89,107 @@ void exibeMenuUsuario() {
 
         switch (opcao) {
             case M_EDITAR_PERFIL:
-                exibeEdicaoPerfilUsuario();
+                edicaoPerfilUsuario(usuario);
+                break;
+            case M_CADASTRAR_LIVRO:
+                exibeMenuLivro();
+                break;
+            case M_MINHA_ESTANTE:
+                exibeMenuMinhaEstante();
+                break;
+            case M_PESQUISA:
+                pesquisaAcervo();
+                break;
+            case M_RECOMENDACOES:
+                exibeMenuRecomendacao();
+                break;
+            case M_REMOVER_PERFIL:
+                exibeRemoveUsuario();
+                break;
+            case M_SAIR_CONTA:
+                estaLogado = 0;
+                usuario.id = 0;
+                exibeMenu();
                 break;
             case M_SAIR:
                 exibeMensagem("Ate breve... :)");
                 exit(EXIT_SUCCESS);
+            default:
+                exibeMensagemErro("Opcao invalida!");
+        }
+    }
+}
+
+/**
+ * Exibe a listagem de livros juntamente com o submenu.
+ * 1 - Cadastrar livros
+ * 2 - Editar livro
+ * 3 - Remover livro
+ * 4 - Voltar para o menu principal
+ */
+void exibeMenuLivro() {
+    int opcao;
+
+    while (opcao != 5) {
+        cout << " .::. PrompSkoob .::." << endl;
+        cout << " - Gerenciar Livro - " << endl << endl;
+        listagemLivros();
+        cout << " (1) Cadastrar | (2) Editar | (3) Remover | (4) Adicionar a Estante | (5) Voltar" << endl << endl;
+        cout << "Opcao: ";
+        cin >> opcao;
+        cout << endl;
+
+        switch (opcao) {
+            case 1:
+                cadastroLivro();
+                break;
+            case 2:
+                edicaoLivro();
+                break;
+            case 3:
+                remocaoLivro();
+                break;
+            case 4:
+                adicionaLivro(usuario);
+                break;
+            case 5:
+                exibeMenu();
+            default:
+                exibeMensagemErro("Opcao invalida!");
+        }
+    }
+}
+
+/**
+ * Exibe a listagem de livros juntamente com o submenu da estante.
+ */
+void exibeMenuMinhaEstante() {
+    int opcao;
+
+    while (opcao != 5) {
+        cout << " .::. PrompSkoob .::." << endl;
+        cout << " - Minha Estante - " << endl << endl;
+        listagemEstantes(usuario);
+        cout << " (1) Mudar Status | (2) Avaliar | (3) Remover | (4) Registro de Leitura |  (5) Voltar" << endl << endl;
+        cout << "Opcao: ";
+        cin >> opcao;
+        cout << endl;
+
+        switch (opcao) {
+            case 1:
+                edicaoSituacao(usuario);
+                break;
+            case 2:
+                avalicaoLivro(usuario);
+                break;
+            case 3:
+                remocaoLivroEstante(usuario);
+                break;
+            case 4:
+                registroLeitura(usuario);
+                break;
+            case 5:
+                exibeMenu();
             default:
                 exibeMensagemErro("Opcao invalida!");
         }
@@ -107,10 +215,13 @@ void exibeMenuVisitante() {
 
         switch (opcao) {
             case MV_CADASTRO_USUARIO:
-                exibeCadastroUsuario();
+                cadastroUsuario();
                 break;
             case MV_AUTENTICACAO:
                 exibeAutenticacaoUsuario();
+                break;
+            case MV_PESQUISA:
+                pesquisaAcervo();
                 break;
             case MV_SAIR:
                 exibeMensagem("Ate breve... :)");
@@ -122,93 +233,45 @@ void exibeMenuVisitante() {
 }
 
 /**
- * Exibe cadastro de usuario.
+ * Exibe o menu de recomendacoes de livros de acordo com os interesses do usuario.
  */
-void exibeCadastroUsuario() {
-    if(cadastroUsuario()) {
-        exibeMenu();
+void exibeMenuRecomendacao() {
+    int opcao;
+
+    while (opcao != 2) {
+        cout << " .::. PrompSkoob .::." << endl;
+        cout << " - Recomendacoes de Livros - " << endl << endl;
+        listagemRecomendacoes(usuario);
+        cout << " (1) Adicionar a Estante | (2) Voltar" << endl << endl;
+        cout << "Opcao: ";
+        cin >> opcao;
+        cout << endl;
+
+        switch (opcao) {
+            case 1:
+                adicionaLivro(usuario);
+                break;
+            case 2:
+                exibeMenu();
+            default:
+                exibeMensagemErro("Opcao invalida!");
+        }
     }
 }
 
 /**
- * Exibe autenticacao de usuario.
+ * Exibe remoçao de usuario.
  */
-void exibeAutenticacaoUsuario() {
-    usuario = autenticacaoUsuario();
+void exibeRemoveUsuario() {
+    char confirmacao;
+    cout << "Deseja realmente remover seu perfil? (S/N) : ";
+    cin >> confirmacao;
 
-    if (usuario.id > 0) {
-        estaLogado = 1;
-        exibeMenu();
-    } else {
-        estaLogado = 0;
+    if (confirmacao == 's' || confirmacao == 'S') {
+        if (!remocaoUsuario(usuario.id)) {
+            estaLogado = 0;
+            usuario.id = 0;
+        }
     }
-}
-
-void exibeEdicaoPerfilUsuario() {
-    if (edicaoPerfilUsuario(usuario)) {
-        exibeMenu();
-    }
-}
-
-//Falta implementacao
-void cadastrar() {
-
-    string nome;
-    cout << "Digite o seu nome:" << endl;
-    cin >> nome;
-
-    string login;
-    cout << "Digite o seu login:" << endl;
-    cin >> login;
-
-    int senha;
-    cout << "Digite a sua senha númerica:" << endl;
-    cin >> senha;
-
-
-}
-
-//Falta implementacao
-void CadastarLivros() {
-
-    string nome;
-    cout << "Digite o nome do Livro:" << endl;
-    cin >> nome;
-
-    string autor;
-    cout << "Digite o nome do Autor:" << endl;
-    cin >> autor;
-
-    int paginas;
-    cout << "Quantidade de paginas: " << endl;
-    cin >> paginas;
-
-    int genero;
-    cout << "Digite o genero do livro(Ficção[1] Romance[2] Não Ficção[3] Suspense[4]): " << endl;
-    cin >> genero;
-
-
-}
-
-//Falta implementacao
-void realizarLogin() {
-
-    string login;
-    cout << "Digite o seu login:" << endl;
-    cin >> login;
-
-    int senha;
-    cout << "Digite a sua senha:" << endl;
-    cin >> senha;
-
-
-}
-
-//Falta implementacao
-void pesquisas() {
-}
-
-//Falta implementacao
-void recomendacoes() {
-    
+    exibeMenu();
 }

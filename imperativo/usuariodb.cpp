@@ -8,38 +8,10 @@ using namespace std;
 
 int autenticaUsuario(struct Usuario &usuario);
 void criaTabelaUsuario();
-int obtemID();
-
-void criaTabelaUsuario() {
-    sqlite3 *bancoDados;
-    char *erroBanco;
-    int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
-    string mensagemErro = "Ocorreu um erro ao criar a tabela de usuario: ";
-
-    if (retorno) {
-        cerr << "Não foi possível abrir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
-    }
-
-    string sql = "CREATE TABLE IF NOT EXISTS usuario("
-                 "id INT PRIMARY KEY NOT NULL, "
-                 "nome TEXT NOT NULL, "
-                 "email TEXT NOT NULL UNIQUE, "
-                 "senha INT NOT NULL, "
-                 "ficcao INT, "
-                 "nao_ficcao INT, "
-                 "romance INT, "
-                 "horror INT, "
-                 "biografia INT);";
-
-    retorno = sqlite3_exec(bancoDados, sql.c_str(), NULL, 0, &erroBanco);
-
-    if (retorno != SQLITE_OK) {
-        cerr << mensagemErro << sqlite3_errmsg(bancoDados) << endl;
-        sqlite3_free(erroBanco);
-    }
-
-    sqlite3_close(bancoDados);
-}
+int editaUsuario(struct Usuario &usuario);
+int insereUsuario(struct Usuario &usuario);
+int geraIDUsuario();
+int removeUsuario(int id);
 
 /**
  * Autentica o usuario atraves do email e senha.
@@ -48,8 +20,6 @@ void criaTabelaUsuario() {
  * @return 0 (sucesso) e 1 (erro)
  */
 int autenticaUsuario(struct Usuario &usuario) {
-    criaTabelaUsuario();
-
     sqlite3 *bancoDados;
     sqlite3_stmt *stmt;
     int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
@@ -107,13 +77,44 @@ int autenticaUsuario(struct Usuario &usuario) {
     return 0;
 }
 
+void criaTabelaUsuario() {
+    sqlite3 *bancoDados;
+    char *erroBanco;
+    int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
+    string mensagemErro = "Ocorreu um erro ao criar a tabela de usuario: ";
+
+    if (retorno) {
+        cerr << "Não foi possível abrir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
+    }
+
+    string sql = "CREATE TABLE IF NOT EXISTS usuario("
+                 "id INT PRIMARY KEY NOT NULL, "
+                 "nome TEXT NOT NULL, "
+                 "email TEXT NOT NULL UNIQUE, "
+                 "senha INT NOT NULL, "
+                 "ficcao INT, "
+                 "nao_ficcao INT, "
+                 "romance INT, "
+                 "horror INT, "
+                 "biografia INT);";
+
+    retorno = sqlite3_exec(bancoDados, sql.c_str(), NULL, 0, &erroBanco);
+
+    if (retorno != SQLITE_OK) {
+        cerr << mensagemErro << sqlite3_errmsg(bancoDados) << endl;
+        sqlite3_free(erroBanco);
+    }
+
+    sqlite3_close(bancoDados);
+}
+
 /**
  * Edita as informacoes de usuario.
  *
  * @param usuario
  * @return 0 (sucesso) e 1 (erro)
  */
-int editaUsuario(struct Usuario usuario) {
+int editaUsuario(struct Usuario &usuario) {
     sqlite3 *bancoDados;
     char *erroBanco;
     int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
@@ -155,69 +156,9 @@ int editaUsuario(struct Usuario usuario) {
 /**
  * Consulta um usuario.
  * @param id
- * @return 0 (sucesso) e 1 (erro)
- */
-int consultaUsuario(vector<string> &usuario, int id) {
-    sqlite3 *bancoDados;
-    sqlite3_stmt *stmt;
-    int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
-    string mensagemErro = "Ocorreu um erro ao consultar usuário: ";
-
-    if (retorno != SQLITE_OK) {
-        cerr << "Não foi possível abrir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
-        sqlite3_finalize(stmt);
-        sqlite3_close(bancoDados);
-
-        return 1;
-    }
-
-    string sql = "SELECT * FROM usuario WHERE id = " + to_string(id) + ";";
-    retorno = sqlite3_prepare(bancoDados, sql.c_str(), -1, &stmt, NULL);
-
-    if (retorno != SQLITE_OK) {
-        cerr << mensagemErro << sqlite3_errmsg(bancoDados) << endl;
-        sqlite3_finalize(stmt);
-        sqlite3_close(bancoDados);
-
-        return 1;
-    }
-
-    while (true) {
-        retorno = sqlite3_step(stmt);
-
-        if (retorno == SQLITE_DONE) break;
-
-        if (retorno != SQLITE_ROW) {
-            cerr << mensagemErro << sqlite3_errmsg(bancoDados) << endl;
-            sqlite3_finalize(stmt);
-            sqlite3_close(bancoDados);
-
-            return 1;
-        }
-
-        const char *idUsuario = reinterpret_cast<const char *>(sqlite3_column_text(stmt, U_ID));
-        const char *nomeUsuario = reinterpret_cast<const char *>(sqlite3_column_text(stmt, U_NOME));
-        const char *emailUsuario = reinterpret_cast<const char *>(sqlite3_column_text(stmt, U_EMAIL));
-        const char *interessesUsuario = reinterpret_cast<const char *>(sqlite3_column_text(stmt, U_INTERESSES));
-
-        usuario.push_back(idUsuario);
-        usuario.push_back(nomeUsuario);
-        usuario.push_back(emailUsuario);
-        usuario.push_back(interessesUsuario);
-    }
-
-    sqlite3_finalize(stmt);
-    sqlite3_close(bancoDados);
-
-    return 0;
-}
-
-/**
- * Consulta um usuario.
- * @param id
  * @return ultimo id (sucesso) e -1 (erro)
  */
-int obtemID() {
+int geraIDUsuario() {
     int id = 1;
     sqlite3 *bancoDados;
     sqlite3_stmt *stmt;
@@ -255,7 +196,7 @@ int obtemID() {
 
             return -1;
         }
-        id = sqlite3_column_int(stmt, U_ID);
+        id = sqlite3_column_int(stmt, 0);
         id += 1;
     }
     sqlite3_finalize(stmt);
@@ -270,9 +211,8 @@ int obtemID() {
  * @param usuario
  * @return 0 (sucesso) e 1 (erro)
  */
-int insereUsuario(struct Usuario usuario) {
-    criaTabelaUsuario();
-    usuario.id = obtemID();
+int insereUsuario(struct Usuario &usuario) {
+    usuario.id = geraIDUsuario();
 
     sqlite3 *bancoDados;
     char *erroBanco;
@@ -307,6 +247,12 @@ int insereUsuario(struct Usuario usuario) {
     return 0;
 }
 
+/**
+ * Remove o usuario pelo id.
+ *
+ * @param id
+ * @return 0 (sucesso) e 1 (erro)
+ */
 int removeUsuario(int id) {
     sqlite3 *bancoDados;
     char *erroBanco;
@@ -314,87 +260,25 @@ int removeUsuario(int id) {
     string mensagemErro = "Ocorreu um erro ao remover usuário: ";
 
     if (retorno != SQLITE_OK) {
-        cerr << "Não foi possível abrir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
+        exibeMensagemErroBancoDados("Não foi possível abrir o banco de dados: ", sqlite3_errmsg(bancoDados));
         sqlite3_close(bancoDados);
 
         return 1;
     }
 
-    string sql = "DELETE FROM usuario WHERE id = " + to_string(id) + ";";
+    string sql = "DELETE FROM usuario "
+                 "WHERE id = " + to_string(id) + ";";
 
     retorno = sqlite3_exec(bancoDados, sql.c_str(), NULL, 0, &erroBanco);
 
     if (retorno != SQLITE_OK) {
-        cerr << mensagemErro << sqlite3_errmsg(bancoDados) << endl;
+        exibeMensagemErroBancoDados(mensagemErro, sqlite3_errmsg(bancoDados));
         sqlite3_free(erroBanco);
         sqlite3_close(bancoDados);
 
         return 1;
     }
 
-    sqlite3_close(bancoDados);
-
-    return 0;
-}
-
-/**
- * Lista todos os usuarios.
- * @param usuarios
- * @return 0 (sucesso) e 1 (erro)
- */
-int listaTodosUsuario(vector<vector<string> > &usuarios) {
-    sqlite3 *bancoDados;
-    sqlite3_stmt *stmt;
-    int retorno = sqlite3_open(BANCO_DADOS, &bancoDados);
-    string mensagemErro = "Ocorreu um erro ao listar usuário: ";
-
-    if (retorno != SQLITE_OK) {
-        cerr << "Não foi possível abrir o banco de dados: " << sqlite3_errmsg(bancoDados) << endl;
-        sqlite3_finalize(stmt);
-        sqlite3_close(bancoDados);
-
-        return 1;
-    }
-
-    string sql = "SELECT * FROM usuario;";
-    retorno = sqlite3_prepare(bancoDados, sql.c_str(), -1, &stmt, NULL);
-
-    if (retorno != SQLITE_OK) {
-        cerr << mensagemErro << sqlite3_errmsg(bancoDados) << endl;
-        sqlite3_finalize(stmt);
-        sqlite3_close(bancoDados);
-
-        return 1;
-    }
-
-    while (true) {
-        retorno = sqlite3_step(stmt);
-
-        if (retorno == SQLITE_DONE) break;
-
-        if (retorno != SQLITE_ROW) {
-            cerr << mensagemErro << sqlite3_errmsg(bancoDados) << endl;
-            sqlite3_finalize(stmt);
-            sqlite3_close(bancoDados);
-
-            return 1;
-        }
-
-        const char *idUsuario = reinterpret_cast<const char *>(sqlite3_column_text(stmt, U_ID));
-        const char *nomeUsuario = reinterpret_cast<const char *>(sqlite3_column_text(stmt, U_NOME));
-        const char *emailUsuario = reinterpret_cast<const char *>(sqlite3_column_text(stmt, U_EMAIL));
-        const char *interessesUsuario = reinterpret_cast<const char *>(sqlite3_column_text(stmt, U_INTERESSES));
-
-        vector<string> usuario;
-        usuario.push_back(idUsuario);
-        usuario.push_back(nomeUsuario);
-        usuario.push_back(emailUsuario);
-        usuario.push_back(interessesUsuario);
-
-        usuarios.push_back(usuario);
-    }
-
-    sqlite3_finalize(stmt);
     sqlite3_close(bancoDados);
 
     return 0;
