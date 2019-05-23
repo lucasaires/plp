@@ -1,3 +1,4 @@
+-- import main
 
 data Usuario = Usuario { idUsuario :: Int
 , nome :: String
@@ -48,10 +49,10 @@ printaEstante (l:ls) tamanhoEstante = do
 
 listagemEstante :: Usuario -> IO()
 listagemEstante usuario  
-    -- | listaLivrosEstante(usuario) == True = printaEstante estantes (size estantes)
+    -- | listaLivrosEstante(usuario) == True = printaEstante estantes (size estantes)                       -- listaLivrosEstante eh uma funcao do DB
     = printaEstante (estantes usuario) (size (estantes usuario))
 
-escolheLivro :: [Livro] -> Livro
+escolheLivro :: [Livro] -> Livro                                                                             -- FUNCAO DA PARTE DO LIVRO, DELETAR ESTE QUANDO IMPLEMENTADO O CORRETO
 escolheLivro livros = Livro 10 "as aventuras de micaela" "micaela" 1000 True True True True True 999 5.0
 
 obtemLivrosEstante :: [Estante] -> [Livro]
@@ -79,10 +80,11 @@ adicionaLivro :: Usuario -> IO()
 adicionaLivro usuario = do
     putStrLn "\n .::. PrompSkoob .::."
     putStrLn " - Adicionar Livros na minha Estante - \n"
-    --let livro = escolheLivro listaLivros -- listaLivros eh uma funcao do DB
+    -- let livro = escolheLivro listaLivros -- listaLivros eh uma funcao do DB
     --let sucesso = adicionaLivroEstante (idUsuario usuario) (idLivro livro) -- adicionaLivroEstante eh uma funcao do DB
-    --if (!sucesso) then putStrLn "Livro adicionado a sua estante com sucesso."
-    --else putStrLn "Ocorreu um erro ao adicionar livro na estante: "
+    let sucesso = True
+    if (not sucesso) then putStrLn "Livro adicionado a sua estante com sucesso."
+    else putStrLn "Ocorreu um erro ao adicionar livro na estante: "
     putStrLn "Deseja adicionar outro livro a sua estante: (S/N)"
     opcao <- getLine
     validaOpcaoAdicao opcao usuario
@@ -96,3 +98,21 @@ validaOpcaoAdicao opcao usuario
     | opcao /= "s" && opcao /= "S" && opcao /= "n" && opcao /= "N" = do 
         putStrLn "\nOpcao invalida"
         adicionaLivro usuario
+
+edicaoSituacao :: Usuario -> IO()
+edicaoSituacao usuario = do
+    putStrLn "\n .::. PrompSkoob .::." 
+    putStrLn " - Mudar Status de Leitura - \n"
+    let livro = escolheLivro (obtemLivrosEstante (estantes usuario))
+    putStrLn "Digite o status de leitura do livro (Nao Lido[1], Lendo[2], Lido[3], Abandonei[4]): "
+    situacao <- readLn :: IO Int
+    whileSituacaoInvalida situacao usuario livro
+
+whileSituacaoInvalida :: Int -> Usuario -> Livro -> IO()
+whileSituacaoInvalida situacao usuario livro
+    | situacao < 1 || situacao > 4 = do
+        putStrLn "Status invalido!"
+        putStrLn "Digite o status de leitura do livro (Nao Lido[1], Lendo[2], Lido[3], Abandonei[4]): "
+        novaSituacao <- readLn :: IO Int
+        whileSituacaoInvalida novaSituacao usuario livro
+    | otherwise = putStrLn "Situacao valida!" --mudaSituacao (idUsuario usuario) (idLivro livro) novaSituacao -- mudaSituacao EH UMA FUNCAO DO DB
