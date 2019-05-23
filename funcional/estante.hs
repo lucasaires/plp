@@ -62,6 +62,7 @@ remocaoLivroEstante :: Usuario -> IO()
 remocaoLivroEstante usuario = do
     putStrLn "\n .::. PrompSkoob .::."
     putStrLn " - Remover Livro da Estante - \n"
+    
     let livro = escolheLivro (obtemLivrosEstante (estantes usuario))
     putStrLn "Deseja realmente remover este livro da sua estante? (S/N) : "
     confirmacao <- getLine
@@ -72,10 +73,26 @@ removeLivroEst usuario livro "s" = putStrLn "removendo Livro da estante" --remov
 removeLivroEst usuario livro "S" = putStrLn "removendo Livro da estante" --removeLivroEstanteDB (idUsuario usuario) (idLivro livro)
 removeLivroEst usuario livro "n" = do
     putStrLn "Livro nao serah removido"
-    --minhaEstante
+    -- retorna para o menu de estante
 
-adicionaLivroEstante :: Usuario -> IO()
-adicionaLivroEstante usuario = do
+adicionaLivro :: Usuario -> IO()
+adicionaLivro usuario = do
     putStrLn "\n .::. PrompSkoob .::."
     putStrLn " - Adicionar Livros na minha Estante - \n"
-    --let livro = escolheLivro 
+    --let livro = escolheLivro listaLivros -- listaLivros eh uma funcao do DB
+    --let sucesso = adicionaLivroEstante (idUsuario usuario) (idLivro livro) -- adicionaLivroEstante eh uma funcao do DB
+    --if (!sucesso) then putStrLn "Livro adicionado a sua estante com sucesso."
+    --else putStrLn "Ocorreu um erro ao adicionar livro na estante: "
+    putStrLn "Deseja adicionar outro livro a sua estante: (S/N)"
+    opcao <- getLine
+    validaOpcaoAdicao opcao usuario
+
+validaOpcaoAdicao :: String -> Usuario -> IO()
+validaOpcaoAdicao "s" usuario = adicionaLivro usuario
+validaOpcaoAdicao "S" usuario = adicionaLivro usuario
+validaOpcaoAdicao "n" usuario = putStrLn "retorna para o menu de estante" -- RETORNA PARA O MENU DE ESTANTE
+validaOpcaoAdicao "N" usuario = putStrLn "retorna para o menu de estante" -- RETORNA PARA O MENU DE ESTANTE
+validaOpcaoAdicao opcao usuario 
+    | opcao /= "s" && opcao /= "S" && opcao /= "n" && opcao /= "N" = do 
+        putStrLn "\nOpcao invalida"
+        adicionaLivro usuario
