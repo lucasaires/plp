@@ -1,3 +1,5 @@
+import Main
+
 data Usuario = Usuario { idUsuario :: Int
 , nome :: String
 , email :: String
@@ -50,16 +52,30 @@ listagemEstante usuario
     -- | listaLivrosEstante(usuario) == True = printaEstante estantes (size estantes)
     = printaEstante (estantes usuario) (size (estantes usuario))
 
+escolheLivro :: [Estante] -> Livro
+escolheLivro estantes = Livro 10 "as aventuras de micaela" "micaela" 1000 True True True True True 999 5.0
+
+obtemLivrosEstante :: [Estante] -> [Estante]
+obtemLivrosEstante estantes = []
+
 remocaoLivroEstante :: Usuario -> IO()
 remocaoLivroEstante usuario = do
-    putStrLn " .::. PrompSkoob .::."
+    putStrLn "\n .::. PrompSkoob .::."
     putStrLn " - Remover Livro da Estante - \n"
-    let livr = escolheLivro (obtemLivrosEstante (estantes usuario))
+    let livro = escolheLivro (obtemLivrosEstante (estantes usuario))
     putStrLn "Deseja realmente remover este livro da sua estante? (S/N) : "
     confirmacao <- getLine
-    removeLivroEst livr confirmacao
+    removeLivroEst usuario livro confirmacao
 
 removeLivroEst :: Usuario -> Livro -> String -> IO()
-removeLivroEst usuario livro "s" = removeLivroEstanteDB (idUsuario usuario) (idLivro livro)
-removeLivroEst usuario livro "S" = removeLivroEstanteDB (idUsuario usuario) (idLivro livro)
-removeLivroEst usuario livro "n" = print "oi"
+removeLivroEst usuario livro "s" = putStrLn "removendo Livro da estante" --removeLivroEstanteDB (idUsuario usuario) (idLivro livro) -- METODO DO DB
+removeLivroEst usuario livro "S" = putStrLn "removendo Livro da estante" --removeLivroEstanteDB (idUsuario usuario) (idLivro livro)
+removeLivroEst usuario livro "n" = do
+    putStrLn "Livro nao serah removido"
+    minhaEstante
+
+adicionaLivroEstante :: Usuario -> IO()
+adicionaLivroEstante usuario = do
+    putStrLn "\n .::. PrompSkoob .::."
+    putStrLn " - Adicionar Livros na minha Estante - \n"
+    let livro = escolheLivro 
