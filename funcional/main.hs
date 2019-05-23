@@ -306,6 +306,19 @@ editarLivro = do
     campo <- readLn :: IO Int
 
     validaEntradaPerfil campo
+    editarperfil2
+
+editarperfil2 :: Int -> IO()
+editarperfil2 campo 
+    |campo == 1 = 
+    |campo == 2 = 
+    |campo == 3 = 
+    |campo == 4 =
+    |campo == 5 = 
+    |campo == 6 =
+    |campo == 7 =
+    |campo == 8 = 
+    |otherwise = 
 
 
 
@@ -320,7 +333,18 @@ minhaEstante :: IO()
 minhaEstante = putStrLn "minha Estante"
 
 recomendaLivros :: IO()
-recomendaLivros = putStrLn "recomendando livros"
+recomendaLivros = do 
+    putStrLn ".::. PrompSkoob .::."
+    putStrLn "Recomendacoe de livros"
+    putStrLn "(1) Adicionar a Estante | (2) Voltar"
+    opcao <- readLn :: IO Int
+
+
+validaEntradaRecomendacao :: Int -> IO
+validaEntradaRecomendacao opcao 
+    | opcao == 1 = adicionarAEstante 
+    | opcao == 2 = 
+
 
 removePerfil :: IO()
 removePerfil = putStrLn "removendo perfil"
