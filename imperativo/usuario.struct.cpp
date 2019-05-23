@@ -1,17 +1,18 @@
 #include <iostream>
+#include <vector>
+#include <string>
 
 using namespace std;
 
-struct Livro {
+struct Usuario {
     int id;
     string nome;
-    string autor;
-    int paginas;
+    string email;
+    string senha;
     int ficcao;
     int naoFiccao;
     int romance;
     int horror;
     int biografia;
-    int leitores;
-    float notaGeral;
+    vector<struct Estante> estantes;
 };

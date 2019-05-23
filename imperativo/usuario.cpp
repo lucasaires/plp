@@ -97,7 +97,7 @@ int edicaoPerfilUsuario(struct Usuario &usuario) {
     char ficcao = (usuario.ficcao == 1) ? 'S' : 'N';
     cout << "(4) Interesse em Ficcao? (S/N): " << ficcao << endl;
     char naoFiccao = (usuario.naoFiccao == 1) ? 'S' : 'N';
-    cout << "(5) Interesse em Não Ficcao? (S/N): " << naoFiccao << endl;
+    cout << "(5) Interesse em Nao Ficcao? (S/N): " << naoFiccao << endl;
     char romance = (usuario.romance == 1) ? 'S' : 'N';
     cout << "(6) Interesse em Romance? (S/N): " << romance << endl;
     char horror = (usuario.horror == 1) ? 'S' : 'N';

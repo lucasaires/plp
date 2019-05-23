@@ -16,6 +16,7 @@
 #import "constantes.cpp"
 #import "usuario.cpp"
 #import "livro.cpp"
+#import "estante.cpp"
 #import "utilitario.cpp"
 
 using namespace std;
@@ -25,11 +26,17 @@ struct Usuario usuario;
 
 void exibeAutenticacaoUsuario();
 void exibeMenu();
+void exibeMenuLivro();
+void exibeMenuMinhaEstante();
+void exibeMenuRecomendacao();
 void exibeMenuUsuario();
 void exibeMenuVisitante();
 void exibeRemoveUsuario();
 
 int main() {
+    criaTabelaEstante();
+    criaTabelaUsuario();
+    criaTabelaLivro();
     exibeMenu();
     return 0;
 }
@@ -87,6 +94,15 @@ void exibeMenuUsuario() {
             case M_CADASTRAR_LIVRO:
                 exibeMenuLivro();
                 break;
+            case M_MINHA_ESTANTE:
+                exibeMenuMinhaEstante();
+                break;
+            case M_PESQUISA:
+                pesquisaAcervo();
+                break;
+            case M_RECOMENDACOES:
+                exibeMenuRecomendacao();
+                break;
             case M_REMOVER_PERFIL:
                 exibeRemoveUsuario();
                 break;
@@ -98,6 +114,82 @@ void exibeMenuUsuario() {
             case M_SAIR:
                 exibeMensagem("Ate breve... :)");
                 exit(EXIT_SUCCESS);
+            default:
+                exibeMensagemErro("Opcao invalida!");
+        }
+    }
+}
+
+/**
+ * Exibe a listagem de livros juntamente com o submenu.
+ * 1 - Cadastrar livros
+ * 2 - Editar livro
+ * 3 - Remover livro
+ * 4 - Voltar para o menu principal
+ */
+void exibeMenuLivro() {
+    int opcao;
+
+    while (opcao != 5) {
+        cout << " .::. PrompSkoob .::." << endl;
+        cout << " - Gerenciar Livro - " << endl << endl;
+        listagemLivros();
+        cout << " (1) Cadastrar | (2) Editar | (3) Remover | (4) Adicionar a Estante | (5) Voltar" << endl << endl;
+        cout << "Opcao: ";
+        cin >> opcao;
+        cout << endl;
+
+        switch (opcao) {
+            case 1:
+                cadastroLivro();
+                break;
+            case 2:
+                edicaoLivro();
+                break;
+            case 3:
+                remocaoLivro();
+                break;
+            case 4:
+                adicionaLivro(usuario);
+                break;
+            case 5:
+                exibeMenu();
+            default:
+                exibeMensagemErro("Opcao invalida!");
+        }
+    }
+}
+
+/**
+ * Exibe a listagem de livros juntamente com o submenu da estante.
+ */
+void exibeMenuMinhaEstante() {
+    int opcao;
+
+    while (opcao != 5) {
+        cout << " .::. PrompSkoob .::." << endl;
+        cout << " - Minha Estante - " << endl << endl;
+        listagemEstantes(usuario);
+        cout << " (1) Mudar Status | (2) Avaliar | (3) Remover | (4) Registro de Leitura |  (5) Voltar" << endl << endl;
+        cout << "Opcao: ";
+        cin >> opcao;
+        cout << endl;
+
+        switch (opcao) {
+            case 1:
+                edicaoSituacao(usuario);
+                break;
+            case 2:
+                avalicaoLivro(usuario);
+                break;
+            case 3:
+                remocaoLivroEstante(usuario);
+                break;
+            case 4:
+                registroLeitura(usuario);
+                break;
+            case 5:
+                exibeMenu();
             default:
                 exibeMensagemErro("Opcao invalida!");
         }
@@ -128,9 +220,39 @@ void exibeMenuVisitante() {
             case MV_AUTENTICACAO:
                 exibeAutenticacaoUsuario();
                 break;
+            case MV_PESQUISA:
+                pesquisaAcervo();
+                break;
             case MV_SAIR:
                 exibeMensagem("Ate breve... :)");
                 exit(EXIT_SUCCESS);
+            default:
+                exibeMensagemErro("Opcao invalida!");
+        }
+    }
+}
+
+/**
+ * Exibe o menu de recomendacoes de livros de acordo com os interesses do usuario.
+ */
+void exibeMenuRecomendacao() {
+    int opcao;
+
+    while (opcao != 2) {
+        cout << " .::. PrompSkoob .::." << endl;
+        cout << " - Recomendacoes de Livros - " << endl << endl;
+        listagemRecomendacoes(usuario);
+        cout << " (1) Adicionar a Estante | (2) Voltar" << endl << endl;
+        cout << "Opcao: ";
+        cin >> opcao;
+        cout << endl;
+
+        switch (opcao) {
+            case 1:
+                adicionaLivro(usuario);
+                break;
+            case 2:
+                exibeMenu();
             default:
                 exibeMensagemErro("Opcao invalida!");
         }
