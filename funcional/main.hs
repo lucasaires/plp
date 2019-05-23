@@ -72,6 +72,8 @@ removePerfil = putStrLn "removendo perfil"
 sairConta :: IO()
 sairConta = rodarSistema False "visitante"
 
+
+
 main = do
     let estaLogado = False
     let nome = "visitante"
