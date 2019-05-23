@@ -65,6 +65,8 @@ cadastro = do
     verificaEscolha escolha4
     verificaEscolha escolha5
 
+    --chama o metodo bd
+
 
 verificaEscolha :: String -> IO ()
 verificaEscolha escolha = if (escolha /= "s" && escolha /= "S" && escolha /= "n" && escolha /= "N") then do 
@@ -96,11 +98,35 @@ pesquisarNoAcervo = do
     putStrLn " - Pesquisar Acervo - "
     putStrLn "Pesquise pelo titulo: "
     livro <- getLine
+    putStrLn ""
     -- pesquisa no bd 
 
+cadastroLivro :: IO() 
+
+cadastroLivro = do
+    putStrLn ".::. PrompSkoob .::."
+    putStrLn " - Cadastrar Livro - "
+    putStr "Nome: "
+    nome <- getLine
+    putStrLn ""
+    putStr "Autor: "
+    autor <- getLine
+    putStrLn ""
+    putStrLn "Total de paginas: "
+    paginas <- readLn :: IO Int
+    putStrLn ""
 
 
-editarPerfil :: IO()
+
+    putStrLn "Livro cadastado com sucesso"
+
+
+verificaPaginas :: Int -> IO ()
+verificaPaginas paginas = if paginas < 0  then do 
+    putStrLn "" 
+    else putStrLn ""
+
+editarPerfil :: IO ()
 editarPerfil = do
     putStrLn ".::. PrompSkoob .::."
     putStrLn " - Editar Meu Perfil - "
@@ -116,15 +142,17 @@ editarPerfil = do
 
     campo <- readLn :: IO Int
 
-
     validaEntradaPerfil campo 
+    --chama o metodo bd 
+    putStrLn "Perfil editado com sucesso"
+
 
 
 validaEntradaPerfil :: Int -> IO ()
 validaEntradaPerfil campo = if (campo < 1 || campo > 8) then do 
     putStrLn "Entrada Invalida"
     editarPerfil
-    else putStrLn "Perfil editado com sucesso"
+    else putStr ""
 
 
 gerenciaLivro :: IO()
