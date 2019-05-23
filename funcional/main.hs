@@ -65,15 +65,20 @@ cadastro = do
     verificaEscolha escolha4
     verificaEscolha escolha5
 
+    putStr""
+    
+
     --chama o metodo bd
 
 
 verificaEscolha :: String -> IO ()
-verificaEscolha escolha = if (escolha /= "s" && escolha /= "S" && escolha /= "n" && escolha /= "N") then do 
-    putStrLn "..." 
-    putStrLn "Erro"
-    cadastro
-    else putStr ""
+verificaEscolha escolha = if (escolha == "s" || escolha == "S" || escolha == "n" || escolha == "N") then do 
+    putStr "" 
+    
+    else do 
+        putStrLn "Erro"
+        cadastro
+        putStr ""
 
 autenticaoUsuario :: String -> String -> Bool -- ESTA FUNCAO SERA REIMPLEMENTADO NA PARTE DE USUARIO
 autenticaoUsuario nome senha = True
@@ -102,29 +107,32 @@ pesquisarNoAcervo = do
     -- pesquisa no bd 
 
 cadastroLivro :: IO() 
-
 cadastroLivro = do
     putStrLn ".::. PrompSkoob .::."
     putStrLn " - Cadastrar Livro - "
+    putStrLn "No final da operacao aparecerá uma mensagem caso seja realizada com sucesso"
     putStr "Nome: "
     nome <- getLine
-    putStrLn ""
     putStr "Autor: "
     autor <- getLine
-    putStrLn ""
-    putStrLn "Total de paginas: "
+    putStr "Total de paginas: "
     paginas <- readLn :: IO Int
-    putStrLn ""
 
+    verificaPaginas nome autor paginas
+    -- cadastra o livro bd 
 
+    
+operacaoSucesso:: IO()
+operacaoSucesso = putStrLn "Operacao realizada com Sucesso"
 
-    putStrLn "Livro cadastado com sucesso"
-
-
-verificaPaginas :: Int -> IO ()
-verificaPaginas paginas = if paginas < 0  then do 
-    putStrLn "" 
-    else putStrLn ""
+verificaPaginas :: String -> String -> Int -> IO()
+verificaPaginas nome autor paginas 
+    | paginas < 0 = cadastroLivro
+    | nome == " " = cadastroLivro
+    | otherwise = operacaoSucesso
+    
+    
+    
 
 editarPerfil :: IO ()
 editarPerfil = do
@@ -139,24 +147,102 @@ editarPerfil = do
     putStrLn "(6) Interesse em Romance? (S/N): "
     putStrLn "(7) Interesse em Horror? (S/N): "
     putStrLn "(8) Interesse em Biografia (S/N): "
-
+    
     campo <- readLn :: IO Int
 
     validaEntradaPerfil campo 
     --chama o metodo bd 
     putStrLn "Perfil editado com sucesso"
 
+modificaPerfil :: Int -> IO()
+modificaPerfil 1 = modificaNome
+modificaPerfil 2 = modifcaEmail
+modificaPerfil 3 = modificaSenha
+modificaPerfil 4 = modificaFiccao
+modificaPerfil 5 = modificaNFiccao
+modificaPerfil 6 = modificaRomace
+modificaPerfil 7 = modificaHorror
+modificaPerfil 8 = modificaBiografia
+
+
+modificaNome :: IO()
+modificaNome = do 
+    putStr "Nome: "
+    nome -> getLine
+    putStr ""
+
+modifcaEmail :: IO()
+modifcaEmail = do 
+    putStr "Email: "
+    email -> getLine
+    putStr ""
+
+modificaSenha :: IO()
+modificaSenha = do 
+    putStr "Senha: "
+    senha -> getLine
+    putStr ""
+
+modificaFiccao :: IO()
+modificaFiccao = do 
+    putStr "Interesse em Ficcao? (S/N): "
+    interesse -> getLine
+    putStr ""
+
+modificaNFiccao :: IO() 
+modificaNFiccao = do 
+    putStr "Interesse em Nao Ficcao? (S/N): "
+    interesse -> getLine
+    putStr ""
+
+modificaRomace :: IO()
+modificaRomace = do
+    putStr "Interesse em Romance? (S/N): "
+    interesse -> getLine
+    putStr ""
+
+modificaHorror :: IO()
+modificaHorror = do
+    putStr "Interesse em Horror? (S/N): "
+    interesse -> getLine
+    putStr ""    
+
+modificaBiografia :: IO()
+modificaBiografia = do 
+    putStr "Interesse em Biografia (S/N): "
+    biografia -> getLine
+    putStr ""
 
 
 validaEntradaPerfil :: Int -> IO ()
 validaEntradaPerfil campo = if (campo < 1 || campo > 8) then do 
     putStrLn "Entrada Invalida"
     editarPerfil
-    else putStr ""
+    else modificaPerfil campo
 
 
 gerenciaLivro :: IO()
-gerenciaLivro = putStrLn "gerenciando livro"
+gerenciaLivro = do
+
+    putStrLn ".::. PrompSkoob .::."
+    putStrLn "Gerenciar Livro -"
+    putStrLn "Cadastrar Livro"
+    putStrLn "(1) Cadastrar Livro | (2) Editar | (3) Remover | (4) Adicionar a Estante | (5) Voltar"
+    opcao <- readLn :: IO Int 
+    verifcaGerenciaLivro opcao
+
+
+verifcaGerenciaLivro :: Int -> IO() 
+verifcaGerenciaLivro opcao 
+    | opcao < 1 || opcao > 5 = gerenciaLivro
+    | otherwise = livroValido opcao 
+
+livroValido :: Int -> IO() 
+livroValido 1 = cadastroLivro
+livroValido 2 = editarLivro
+livroValido 3 = removerLivro
+livroValido 4 = adicionarAEstante
+--livroValido 5 =  
 
 minhaEstante :: IO()
 minhaEstante = putStrLn "minha Estante"
@@ -185,4 +271,3 @@ rodarSistema estaLogado nome = do
         putStrLn "Opcao invalida!\n"
         main
     else acaoMenu opcao estaLogado
-    
