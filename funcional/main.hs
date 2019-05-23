@@ -104,34 +104,7 @@ pesquisarNoAcervo = do
     putStrLn "Pesquise pelo titulo: "
     livro <- getLine
     putStrLn ""
-    -- pesquisa no bd 
-
-cadastroLivro :: IO() 
-cadastroLivro = do
-    putStrLn ".::. PrompSkoob .::."
-    putStrLn " - Cadastrar Livro - "
-    putStrLn "No final da operacao aparecerá uma mensagem caso seja realizada com sucesso"
-    putStr "Nome: "
-    nome <- getLine
-    putStr "Autor: "
-    autor <- getLine
-    putStr "Total de paginas: "
-    paginas <- readLn :: IO Int
-
-    verificaPaginas nome autor paginas
-    -- cadastra o livro bd 
-
-    
-operacaoSucesso:: IO()
-operacaoSucesso = putStrLn "Operacao realizada com Sucesso"
-
-verificaPaginas :: String -> String -> Int -> IO()
-verificaPaginas nome autor paginas 
-    | paginas < 0 = cadastroLivro
-    | nome == " " = cadastroLivro
-    | otherwise = operacaoSucesso
-    
-    
+    -- pesquisa no bd     
     
 
 editarPerfil :: IO ()
@@ -166,51 +139,51 @@ modificaPerfil 8 = modificaBiografia
 
 
 modificaNome :: IO()
-modificaNome = do 
+modificaNome = do
     putStr "Nome: "
-    nome -> getLine
+    nome <- getLine
     putStr ""
 
 modifcaEmail :: IO()
 modifcaEmail = do 
     putStr "Email: "
-    email -> getLine
+    email <- getLine
     putStr ""
 
 modificaSenha :: IO()
 modificaSenha = do 
     putStr "Senha: "
-    senha -> getLine
+    senha <- getLine
     putStr ""
 
 modificaFiccao :: IO()
 modificaFiccao = do 
     putStr "Interesse em Ficcao? (S/N): "
-    interesse -> getLine
+    interesse <- getLine
     putStr ""
 
 modificaNFiccao :: IO() 
 modificaNFiccao = do 
     putStr "Interesse em Nao Ficcao? (S/N): "
-    interesse -> getLine
+    interesse <- getLine
     putStr ""
 
 modificaRomace :: IO()
 modificaRomace = do
     putStr "Interesse em Romance? (S/N): "
-    interesse -> getLine
+    interesse <- getLine
     putStr ""
 
 modificaHorror :: IO()
 modificaHorror = do
     putStr "Interesse em Horror? (S/N): "
-    interesse -> getLine
-    putStr ""    
+    interesse <- getLine
+    putStr ""
 
 modificaBiografia :: IO()
 modificaBiografia = do 
     putStr "Interesse em Biografia (S/N): "
-    biografia -> getLine
+    biografia <- getLine
     putStr ""
 
 
@@ -243,6 +216,41 @@ livroValido 2 = editarLivro
 livroValido 3 = removerLivro
 livroValido 4 = adicionarAEstante
 --livroValido 5 =  
+
+cadastroLivro :: IO() 
+cadastroLivro = do
+    putStrLn ".::. PrompSkoob .::."
+    putStrLn " - Cadastrar Livro - "
+    putStrLn "No final da operacao aparecerá uma mensagem caso seja realizada com sucesso"
+    putStr "Nome: "
+    nome <- getLine
+    putStr "Autor: "
+    autor <- getLine
+    putStr "Total de paginas: "
+    paginas <- readLn :: IO Int
+    
+    verificaPaginas nome autor paginas
+    -- cadastra o livro bd 
+    
+        
+operacaoSucesso:: IO()
+operacaoSucesso = putStrLn "Operacao realizada com Sucesso"
+    
+verificaPaginas :: String -> String -> Int -> IO()
+verificaPaginas nome autor paginas 
+    | paginas < 0 = cadastroLivro
+    | nome == " " = cadastroLivro
+    | otherwise = operacaoSucesso
+    
+
+editarLivro :: IO() 
+editarLivro = putStrLn "editando livro"
+
+removerLivro :: IO()
+removerLivro = putStrLn "removendoLivro"
+
+adicionarAEstante:: IO()
+adicionarAEstante = putStrLn "adicionando a estante"
 
 minhaEstante :: IO()
 minhaEstante = putStrLn "minha Estante"
