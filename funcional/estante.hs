@@ -9,7 +9,7 @@ data Usuario = Usuario { idUsuario :: Int
 , gostaRomance :: Bool
 , gostaHorror :: Bool
 , gostaBiografia :: Bool
-, estantes :: [Estante]} deriving (Show)
+, estantes :: [Estante]} deriving (Show, Read)
 
 data Livro =  Livro { idLivro :: Int
 , titulo :: String
@@ -21,14 +21,14 @@ data Livro =  Livro { idLivro :: Int
 , horror :: Bool
 , biografia :: Bool
 , leitores :: Int
-, notaGeral :: Float} deriving (Show)
+, notaGeral :: Float} deriving (Show, Read)
 
 data Estante =  Estante { idLivroE :: Int
 , idEstante :: Int
 , usuario :: Usuario
 , livro :: Livro
 , nota :: Float
-, situacao :: Int} deriving (Show)
+, situacao :: Int} deriving (Show, Read)
 
 size :: [t] -> Int
 size [] = 0
