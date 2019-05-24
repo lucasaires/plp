@@ -289,8 +289,7 @@ verificaPaginas nome autor paginas
 
 editarLivro :: IO() 
 editarLivro = do
-    
-    [(String,String)] 
+
     putStrLn ".::. PrompSkoob .::."
     putStrLn " - Editar Livro - "
     putStrLn "Qual campo deseja modificar? "
@@ -306,19 +305,19 @@ editarLivro = do
     campo <- readLn :: IO Int
 
     validaEntradaPerfil campo
-    editarperfil2
+   -- editarperfil2
 
-editarperfil2 :: Int -> IO()
-editarperfil2 campo 
-    |campo == 1 = 
-    |campo == 2 = 
-    |campo == 3 = 
-    |campo == 4 =
-    |campo == 5 = 
-    |campo == 6 =
-    |campo == 7 =
-    |campo == 8 = 
-    |otherwise = 
+--editarperfil2 :: Int -> IO()
+--editarperfil2 campo --
+  --  |campo == 1 = ----
+  --  |campo == 2 = ------
+  --  |campo == 3 = --------
+  --  |campo == 4 =----------
+  --  |campo == 5 =------------ 
+  --  |campo == 6 =------------
+  --  |campo == 7 =------------
+  --  |campo == 8 =------------ 
+  --  |otherwise = --------------
 
 
 
@@ -338,16 +337,30 @@ recomendaLivros = do
     putStrLn "Recomendacoe de livros"
     putStrLn "(1) Adicionar a Estante | (2) Voltar"
     opcao <- readLn :: IO Int
+   -- validaEntradaRecomendacao opcao
+    putStr ""
 
 
-validaEntradaRecomendacao :: Int -> IO
-validaEntradaRecomendacao opcao 
-    | opcao == 1 = adicionarAEstante 
-    | opcao == 2 = 
+--validaEntradaRecomendacao :: Int -> IO 
+--validaEntradaRecomendacao 1 = adicionarAEstante 
+--validaEntradaRecomendacao 2 = adicionarAEstante
 
 
 removePerfil :: IO()
-removePerfil = putStrLn "removendo perfil"
+
+removePerfil = do
+    putStrLn "Deseja realmente remover seu perfil (S/N): "
+    confirmacao <- getLine
+    verificaConfirmacao confirmacao
+    putStr ""
+
+verificaConfirmacao :: String -> IO()
+verificaConfirmacao confirmacao
+    |confirmacao == "S" || confirmacao == "s" = putStrLn "Perfil Excluido"
+    |confirmacao == "N" || confirmacao == "n" = putStrLn "Perfil nao exlcuido"
+    |otherwise = removePerfil
+
+
 
 sairConta :: IO()
 sairConta = rodarSistema False "visitante"
