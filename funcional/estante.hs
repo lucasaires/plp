@@ -33,6 +33,9 @@ data Estante =  Estante { idLivroE :: Int
 size :: [t] -> Int
 size [] = 0
 size (x:xs) = 1 + size xs
+
+
+
 registroLeitura :: Usuario -> IO()
 registroLeitura usuario = do
 	putStrLn " .::. PrompSkoob .::."
