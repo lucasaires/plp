@@ -16,7 +16,7 @@ data Livro =  Livro { idLivro :: Int
 , autor :: String
 , paginas :: Int
 , ficcao :: Bool
-, naoFicao :: Bool
+, naoFiccao :: Bool
 , romance :: Bool
 , horror :: Bool
 , biografia :: Bool
