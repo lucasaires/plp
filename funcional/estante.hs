@@ -33,6 +33,55 @@ data Estante =  Estante { idLivroE :: Int
 size :: [t] -> Int
 size [] = 0
 size (x:xs) = 1 + size xs
+registroLeitura :: Usuario -> IO()
+registroLeitura usuario = do
+	putStrLn " .::. PrompSkoob .::."
+	putStrLn "- Registrar Leitura -  \n"
+	
+	escolheLivro(obtemLivrosEstante(estantes usuario));
+	estante = obtemEstantePorLivro(estantes usuario);
+	(estantes paginasLidas) <- verificaAvaliacao
+	
+	putStrLn "Deixe seu comentario sobre o livro: "
+	(estantes comentario)<- getLine
+	
+	registraLeitura(estantes);
+	
+	putStrLn "Registro de leitura realizado com sucesso."
+
+
+
+verificaQuantPaginas :: IO Int
+verificaQuantPaginas = do 
+	putStrLin "Quantas páginas foram lidas?"
+	(estantes paginasLidas) <- readLn :: IO Int
+	if((estantes paginasLidas) > 0 || (estantes paginasLidas) < (livro paginas)) then return (estantes paginasLidas)
+	else do
+		putStrLn "Numero de pagina invalida!"
+		(estantes paginasLidas) <- verificaQuantPaginas :: IO Int
+		return (estantes paginasLidas)
+	
+	
+
+verificaAvaliacao :: IO Int
+verificaAvaliacao  = do
+	putStrLn "Dê sua nota de avalicao no intervalo de 1 a 5: "
+	nota <- readLn :: IO Int
+	if(nota >= 0 || nota <= 5) then return nota
+	else do
+		putStrLn "Nota invalida!"
+		nota <- verificaAvaliacao :: IO Int
+		return nota
+	
+avalicaoLivro :: Usuario -> IO()
+avalicaoLivro usuario = do
+    putStrLn " .::. PrompSkoob .::."
+	putStrLn " - Avaliar Livro da Estante - \n"
+	let livr = escolheLivro (obtemLivrosEstante (estantes usuario))
+	nota <- verificaAvaliacao
+	avaliaLivro((idUsuario usuario) (idLivro livro) (nota))
+	putStrLn "Avaliação realizada com sucesso."
+
 
 obtemSituacao :: Int -> String
 obtemSituacao 1 = "Nao Lido"
