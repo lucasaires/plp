@@ -337,13 +337,13 @@ recomendaLivros = do
     putStrLn "Recomendacoe de livros"
     putStrLn "(1) Adicionar a Estante | (2) Voltar"
     opcao <- readLn :: IO Int
-   -- validaEntradaRecomendacao opcao
+    validaEntradaRecomendacao opcao
     putStr ""
 
 
---validaEntradaRecomendacao :: Int -> IO 
---validaEntradaRecomendacao 1 = adicionarAEstante 
---validaEntradaRecomendacao 2 = adicionarAEstante
+validaEntradaRecomendacao :: Int -> IO() 
+validaEntradaRecomendacao 1 = adicionarAEstante 
+validaEntradaRecomendacao 2 = putStrLn "volta ao menu"
 
 
 removePerfil :: IO()
