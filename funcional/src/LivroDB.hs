@@ -138,8 +138,8 @@ pesquisaLivros titulo = do
   resultado <-
     quickQuery'
       conexao
-      ("SELECT *, (SELECT COUNT(id_livro) FROM estante WHERE id_livro = id) AS leitores, (SELECT AVG(nota) FROM " ++
-       "estante WHERE id_livro = id) AS nota_geral FROM livro WHERE titulo like '%" ++ titulo ++ "%';")
+      ("SELECT *, COALESCE((SELECT COUNT(id_livro) FROM estante WHERE id_livro = id),0) AS leitores, COALESCE((SELECT AVG(nota) FROM " ++
+       "estante WHERE id_livro = id),0) AS nota_geral FROM livro WHERE titulo like '%" ++ titulo ++ "%';")
       []
   disconnect conexao
   if null resultado

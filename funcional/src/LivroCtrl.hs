@@ -19,8 +19,8 @@ adicionarLivroEstante usuario = do
   idLivro <- escolheLivroAdicionar usuario
   livroFoiAdicionado <- adicionaLivroEstante idLivro (idUsuario usuario)
   if (livroFoiAdicionado)
-    then exibeMensagem "Livro nao foi adicionada a sua estante."
-    else exibeMensagem "Livro adicionado a sua estante com sucesso."
+    then exibeMensagem "Livro adicionado a sua estante com sucesso."
+    else exibeMensagem "Livro nao foi adicionada a sua estante."
   putStrLn "Deseja adicionar outro livro a sua estante? (S/N): "
   confirmar <- getLine
   if (confirmar == "s" || confirmar == "S")

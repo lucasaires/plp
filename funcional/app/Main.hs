@@ -85,9 +85,8 @@ gerenciaEstante usuario = do
   estantes <- listaEstantes (idUsuario usuario)
   exibeLivrosEstante estantes (length estantes)
   putStrLn "(1) Mudar Status | (2) Avaliar | (3) Remover | (4) Voltar"
-  putStrLn "Opcao: "
-  opcao <- readLn :: IO Int
-  opcao <- validaOpcao "Opcao: " opcao 1 4
+  opcao <- lerEntradaObrigatoria "Opcao: "
+  opcao <- validaOpcao "Opcao: " (read opcao :: Int) 1 4
   if opcao == 4
     then exibeMenuUsuario usuario
     else exibeMenuEstante opcao usuario
@@ -99,9 +98,8 @@ gerenciaLivro usuario = do
   livros <- listaLivros
   exibeLivros livros (length livros)
   putStrLn "(1) Cadastrar | (2) Editar | (3) Remover | (4) Adicionar a Estante | (5) Voltar"
-  putStrLn "Opcao: "
-  opcao <- readLn :: IO Int
-  opcao <- validaOpcao "Opcao: " opcao 1 5
+  opcao <- lerEntradaObrigatoria "Opcao: "
+  opcao <- validaOpcao "Opcao: " (read opcao :: Int) 1 5
   if opcao == 5
     then exibeMenuUsuario usuario
     else exibeMenuLivro opcao usuario
@@ -152,14 +150,13 @@ exibeMenuUsuario usuario = do
   putStrLn "(7) Sair da conta"
   putStrLn "(8) Sair"
   putStrLn ""
-  putStrLn "Opcao: "
-  opcao <- readLn :: IO Int
+  opcao <- lerEntradaObrigatoria "Opcao: "
   putStrLn ""
-  if not (validaOpcaoMenu opcao True)
+  if not (validaOpcaoMenu (read opcao :: Int) True)
     then do
       exibeMensagem "Opcao invalida!"
       exibeMenuUsuario usuario
-    else acaoMenu opcao usuario
+    else acaoMenu (read opcao :: Int) usuario
 
 exibeMenuVisitante :: IO ()
 exibeMenuVisitante = do
@@ -170,14 +167,13 @@ exibeMenuVisitante = do
   putStrLn "(3) Pesquisar no acervo"
   putStrLn "(4) Sair"
   putStrLn ""
-  putStrLn "Opcao: "
-  opcao <- readLn :: IO Int
+  opcao <- lerEntradaObrigatoria "Opcao: "
   putStrLn ""
-  if not (validaOpcaoMenu opcao False)
+  if not (validaOpcaoMenu (read opcao :: Int) False)
     then do
       exibeMensagem "Opcao invalida!"
       exibeMenuVisitante
-    else acaoMenuVisitante opcao
+    else acaoMenuVisitante (read opcao :: Int)
 
 validaOpcaoMenu :: Int -> Bool -> Bool
 validaOpcaoMenu opcao estaLogado
