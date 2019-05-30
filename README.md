@@ -19,7 +19,7 @@ dada por usuários do **PrompSkoob**.
 
 [Documentação completa.]()
 
-## Como executar?
+## Como executar o PrompSkoob Imperativo (C++)?
 
 Deve ter o compilador de C++, `g++` e executar o seguinte comando dentro da pasta do projeto:
 ```
@@ -44,4 +44,16 @@ choco install sqlite
 Mac OS
 ```
 brew install sqlite
+```
+
+## Como executar o PrompSkoob Funcional (Haskell)?
+
+É necessário instalar o Haskell no seu computador, possível installar por [aqui](https://www.haskell.org/downloads/). Após a instalação, é necessário executar os seguintes comandos para instalar as dependências:
+```
+cd funcional
+cabal install
+```
+Após instalado as dependências, execute a aplicação com o seguinte comando:
+```
+stack build
 ```
