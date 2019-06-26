@@ -57,3 +57,6 @@ Após instalado as dependências, execute a aplicação com o seguinte comando:
 ```
 stack build
 ```
+## Como executar o PrompSkoob Lógico (Prolog)?
+
+Caso obtenha o erro `ERROR: url 'https://www.swi-prolog.org/pack/query'' does not exist (status(500,Internal Server Error))` ao tentar instalar a biblioteca `prosqlite`. Possível [solução](https://swi-prolog.discourse.group/t/www-swi-prolog-org-goes-https/811/2).
