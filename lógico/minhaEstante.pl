@@ -1,6 +1,6 @@
 
 listagemEstante(Usuario) :-
-    %listaLivrosEstante(Usuario) == 1, getEstantes(Usuario, Estantes), size(Estantes, Size), printaEstante(Estantes, Size).    
+    listaLivrosEstante(Usuario) == 1,   
     getEstantes(Usuario, Estantes), 
     size(Estantes, Size), 
     printaEstante(Estantes, Size).
@@ -40,32 +40,33 @@ removerLivroEstante(Usuario) :-
     nl,
     write(" .::. PrompSkoob .::."), nl, nl,
     write(" - Removendo livros da minha estante - "), nl, nl,
-    %getEstantes(Usuario, Estantes),
-    %obtemLivrosEstante(Estantes, Livros),
+    getEstantes(Usuario, Estantes),
+    obtemLivrosEstante(Estantes, Livros),
     write("Livros na sua Estante : "), nl,
-    %listagemEstante(Usuario),
+    listagemEstante(Usuario),
     getEstantes(Usuario, Estantes),
     nl, write("Insira o ID do livro que voce deseja remover da sua estante: "), nl,
     read_line_to_string(user_input, String),
-    atom_string(Atom, String),
-    %getIdUsuario(Usuario, IdUsuario),    
-    verificaExistenciaLivro(Estantes, Estantes, Atom, Usuario).
+    atom_string(Atom, String),    
+    Acao = removeEstante(IdUsuario, Estante),
+    verificaExistenciaLivro(Estantes, Estantes, Atom, Usuario, Acao).
 
-verificaExistenciaLivro([], Estantes, IdLivro, Usuario) :- 
+verificaExistenciaLivro([], Estantes, IdLivro, Usuario, Acao) :- 
     write("Livro nao existe na sua estante."), nl, nl,
     write("Insira um ID valido: "),
     read_line_to_string(user_input, String),
     atom_string(Atom, String),
-    verificaExistenciaLivro(Estantes, Estantes, IdLivro, Usuario).
-verificaExistenciaLivro([Estante|Estantes], Est, Estante, Usuario) :- removeEstante(0, Estante).
-verificaExistenciaLivro([Estante|Estantes], Est, IdLivro, Usuario) :- verificaExistenciaLivro(Estantes, Est, IdLivro, IdUsuario).
-
-
-
-    %getIdLivroEstante(Estante, ID),
-    %getIdUsuario(Usuario, IdUsuario),
-    %ID == IdLivro -> (removeEstante(IdUsuario, IdLivro)),
-    %ID \= IdLivro -> (verificaExistenciaLivro(Estantes, Est, IdLivro, IdUsuario)).
+    verificaExistenciaLivro(Estantes, Estantes, IdLivro, Usuario, Acao).
+verificaExistenciaLivro([Estante|Estantes], Est, IdLivro, Usuario, Acao) :- Acao.
+    getIdLivroEstante(Estante, ID),
+    getIdUsuario(Usuario, IdUsuario) -> (
+        ID == IdLivro, removeEstante(IdUsuario, IdLivro);
+        ID \= IdLivro, (verificaExistenciaLivro(Estantes, Est, IdLivro, IdUsuario))).
+    
+%verificaExistenciaLivro([Estante|Estantes], Est, IdLivro, Usuario, Acao) :- 
+%    getIdLivroEstante(Estante, ID),
+%    getIdUsuario(Usuario, IdUsuario),
+%    verificaExistenciaLivro(Estantes, Est, IdLivro, IdUsuario, Acao).
 
 removeEstante(IdUsuario, IdLivro) :- write("removido").
 
@@ -78,13 +79,13 @@ obtemLivrosEstante([Estante|Estantes], [Livro|Livros]):-
 adicionaLivroMinhaEst(Usuario) :- 
     nl, write(" .::. PrompSkoob .::."), nl,
     write(" - Adicionando livros a minha estante - "), nl, nl,
-    %listaLivros(Livros),
-    %escolheLivro(Livros, Livro), %__________________FUNCAO DO DB
-    %getIdUsuario(Usuario, IdUsuario),
-    %getIdLivro(Livro, IdLivro),
-    %adicionaLivroEstanteDB(IdUsuario, IdLivro, Sucesso) ->( %___________FUNCAO DO DB
-    %Sucesso == 1, write("Livro adicionado a sua estante com sucesso.");
-    %Sucesso \= 1, write("Ocorreu um erro ao adicionar livro na estante: ")),
+    listaLivros(Livros),
+    scolheLivro(Livros, Livro), %__________________FUNCAO DO DB
+    getIdUsuario(Usuario, IdUsuario),
+    getIdLivro(Livro, IdLivro),
+    adicionaLivroEstanteDB(IdUsuario, IdLivro, Sucesso) ->( %___________FUNCAO DO DB
+    Sucesso == 1, write("Livro adicionado a sua estante com sucesso.");
+    Sucesso \= 1, write("Ocorreu um erro ao adicionar livro na estante: ")),
     write("Deseja adicionar outro livro a sua estante: (S/N) "), nl,
     read_line_to_string(user_input, Entrada),
     Acao = adicionaLivroMinhaEst(Usuario),
@@ -101,15 +102,38 @@ verificaEntradaSN(Entrada, Usuario, Acao) :-
     read_line_to_string(user_input, NewEntrada), 
     verificaEntradaSN(NewEntrada, Usuario, Acao).
 
-mudarSt
+mudarStatusLeitura(Usuario):-
+    nl, write(" .::. PrompSkoob .::."), nl,
+    write(" - Mudar status de leitura - "), nl, nl,
+    listagemEstante(Usuario),
+    write("Insira o ID do livro que voce deseja mudar o status: "), nl,
+    read_line_to_string(user_input, String),
+    atom_string(Atom, String),
+    getEstantes(Usuario, Estantes),
+    Acao = mudandoStatus(Estante, Usuario),
+    verificaExistenciaLivro(Estantes, Estantes, Atom, Usuario, Acao).
+
+mudandoStatus(Estante, Usuario, IdLivro):- 
+    write("Digite o status de leitura do livro(Nao lido[1] | Lendo[2] | Lido[3] | Abandonei[4]): "),
+    read_line_to_string(user_input, String),
+    atom_string(Atom, String),
+    getIdUsuario(Usuario, IdUsuario),
+    validaSituacao(Atom, IdUsuario, IdLivro).
+
+validaSituacao(Atom, IdUsuario, IdLivro):- atom_number(Atom, Situacao), Situacao >= 1, Situacao =< 4, write("mudando status"). %mudaStatusDB(IdUsuario, IdLivro).
+validaSituacao(Situacao, IdUsuario, IdLivro):-
+    write("Status invalido!"), nl,
+    write("Digite o status de leitura do livro (Nao Lido[1], Lendo[2], Lido[3], Abandonei[4]): "),
+    read_line_to_string(user_input, String),
+    atom_string(Atom, String),
+    validaSituacao(Atom, IdUsuario, IdLivro).
 
 %______________________ESTANTE________________________
 getIdLivroEstante(estante(IdLivroE,_,_,_,_,_), IdLivroE).
-getIdEstante(estante(_,IdEstante,_,_,_,_),IdEstante).
-getUsuario(estante(_,_,Usuario,_,_,_),Usuario).
-getLivro(estante(_,_,_,Livro,_,_),Livro).
-getNota(estante(_,_,_,_,Nota,_),Nota).
-getSituacao(estante(_,_,_,_,_,Situacao), Situacao).
+getUsuario(estante(_,Usuario,_,_,_),Usuario).
+getLivro(estante(_,_,Livro,_,_),Livro).
+getNota(estante(_,_,_,Nota,_),Nota).
+getSituacao(estante(_,_,_,_,Situacao), Situacao).
 
 %________________________USUARIO_____________________________
 getIdUsuario(usuario(IdUsuario,_,_,_,_,_,_,_,_,_), IdUsuario).
