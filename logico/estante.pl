@@ -1,3 +1,39 @@
+registroLeitura(Usuario) :-
+    nl,
+    write(" .::. PrompSkoob .::."), nl, nl,
+    write(" - Registrar Leitura - "), nl, nl,
+    getEstantes(Usuario, Estantes),
+    escolheLivro(Livros Livro), %_______ banco de dados
+	obtemLivrosEstante(Estantes, Livros),
+	obtemEstantePorLivro(Estantes, Livro, Estante),
+	getPaginasLidas(),
+	write("Deixe seu comentario sobre o livro: "), nl,
+	read_line_to_string(user_input,Comentario),
+	Acao = registraLeitura(Estante,Retorno).%______ banco de dados
+
+	
+obtemEstantePorLivro([], Livro, Est) :- write("Este livro nao existe na sua estante").
+obtemEstantePorLivro([Estante|Estantes], Livro, Est) :-
+	getIdLivroEstante(Estante, idLivroE),
+	getIdLivro(Livro, idLivro) -> (idLivroE == idLivro, Est = Estante;
+	idLivroE \= idLivro,
+obtemEstantePorLivro(Estantes, Livro, Est)).
+
+	
+getPaginasLidas(Out) :-
+	lerPaginasLidas("Quantas paginas foram lidas? ", Out).
+
+lerPaginasLidas(Mensagem,Out) :-
+	write(Mensagem),nl,read_line_to_string(user_input,PaginasLidas), number_string(NewPaginasLidas,PaginasLidas), validaPaginasLidas(NewPaginasLidas, Out).
+
+validaPaginasLidas(NewPaginasLidas, Out) :-
+	getPaginas(Livro,NPaginas),
+	PaginasLidas > 0, PaginasLidas < NPaginas, Out = PaginasLidas;
+	lerPaginasLidas("Digite quantidade de páginas válida: ", Out).
+
+
+
+
 
 
 avalicaoLivro(Usuario):-
