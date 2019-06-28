@@ -29,7 +29,7 @@ lerNota(Mensagem,Out) :-
 
 avaliaNota(Nota, Out) :-
 	number_string(Num,Nota), Num > 0, Num =< 5, Out = Num, write("Faz avaliacao").
- %  no ligar do write("faz avaliacao") colocar a funcao do banco de dados
+ %  no lugar do write("faz avaliacao") colocar a funcao do banco de dados
 avaliaNota(Nota,Out) :- lerNota("Digite o valor de acordo com as opcoes dadas: ", Out).
 
 avaliaLivro(IdUsuario, IdLivro, getNota) :- write("avaliado").
