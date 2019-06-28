@@ -3,7 +3,7 @@ registroLeitura(Usuario) :-
     write(" .::. PrompSkoob .::."), nl, nl,
     write(" - Registrar Leitura - "), nl, nl,
     getEstantes(Usuario, Estantes),
-    escolheLivro(Livros Livro), %_______ banco de dados
+    escolheLivro(Estantes, Livro), %_______ banco de dados
 	obtemLivrosEstante(Estantes, Livros),
 	obtemEstantePorLivro(Estantes, Livro, Estante),
 	getPaginasLidas(),
