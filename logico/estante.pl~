@@ -28,8 +28,7 @@ lerNota(Mensagem,Out) :-
 	write(Mensagem),nl,read_line_to_string(user_input,Nota), avaliaNota(Nota,Out).
 
 avaliaNota(Nota, Out) :-
-	number_string(Num,Nota), Num > 0, Num =< 5, Out = Num, write("Faz avaliacao").
- %  no ligar do write("faz avaliacao") colocar a funcao do banco de dados
+	number_string(Num,Nota), Num > 0, Num =< 5, Out = Num, write("Faz avaliacao"). %  no ligar do write("faz avaliacao") colocar a funcao do banco de dados
 avaliaNota(Nota,Out) :- lerNota("Digite o valor de acordo com as opcoes dadas: ", Out).
 
 avaliaLivro(IdUsuario, IdLivro, getNota) :- write("avaliado").
