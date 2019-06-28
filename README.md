@@ -48,7 +48,7 @@ brew install sqlite
 
 ## Como executar o PrompSkoob Funcional (Haskell)?
 
-É necessário instalar o Haskell no seu computador, possível installar por [aqui](https://www.haskell.org/downloads/). Após a instalação, é necessário executar os seguintes comandos para instalar as dependências:
+É necessário instalar o Haskell no seu computador, possível instalar por [aqui](https://www.haskell.org/downloads/). Após a instalação, é necessário executar os seguintes comandos para instalar as dependências:
 ```
 cd funcional
 cabal install
@@ -59,4 +59,18 @@ stack build
 ```
 ## Como executar o PrompSkoob Lógico (Prolog)?
 
-Caso obtenha o erro `ERROR: url 'https://www.swi-prolog.org/pack/query'' does not exist (status(500,Internal Server Error))` ao tentar instalar a biblioteca `prosqlite`. Possível [solução](https://swi-prolog.discourse.group/t/www-swi-prolog-org-goes-https/811/2).
+É necessário instalar o Prolog no seu computador, possível instalar por [aqui](https://www.swi-prolog.org/download/stable). 
+Após a instalação, instale o pacote `prosqlite` conforme [aqui](https://www.swi-prolog.org/pack/list?p=prosqlite) 
+executando o comando:
+```
+swipl
+?- pack_install( prosqlite ).
+```
+Caso obtenha o erro `ERROR: url 'https://www.swi-prolog.org/pack/query'' does not exist (status(500,Internal Server Error))` 
+ao tentar instalar a biblioteca `prosqlite`. Possível [solução](https://swi-prolog.discourse.group/t/www-swi-prolog-org-goes-https/811/2).
+
+Após concluída a instalação do pacote, execute:
+```
+cd logico
+swipl main.pl
+```
